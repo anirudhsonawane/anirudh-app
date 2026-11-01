@@ -1,0 +1,506 @@
+/* =========================================
+   ROOT VARIABLES
+========================================= */
+
+:root {
+  --dark: #0f0f0f;
+  --light: #ffffff;
+
+  --digit-h: 1.65rem;
+
+  --page-padding: 3rem;
+}
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: "Google Sans Flex", sans-serif;
+
+  background: var(--light);
+  color: var(--dark);
+
+  overflow: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  font-size: 1.1rem;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.nav {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.navigation {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
+  padding: var(--page-padding);
+
+  display: flex;
+  align-items: center;
+
+  z-index: 20;
+}
+
+.nav-item {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+}
+
+.nav-item:nth-child(1) {
+  justify-content: flex-start;
+}
+
+.nav-item:nth-child(2) {
+  justify-content: center;
+}
+
+.nav-item:nth-child(3) {
+  justify-content: flex-end;
+}
+
+.nav-item a {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.nav-brand a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.09em;
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
+
+.hero {
+  position: relative;
+
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  background: var(--light);
+}
+
+/* =========================================
+   MARQUEE
+========================================= */
+
+.marquee {
+  position: absolute;
+
+  top: 45%;
+  left: 0;
+
+  width: 100%;
+
+  transform: translateY(-75%);
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+.marquee-track {
+  display: flex;
+
+  align-items: center;
+
+  width: max-content;
+
+  will-change: transform;
+}
+
+.marquee-track h1 {
+  flex-shrink: 0;
+
+  padding-right: 0.5em;
+
+  white-space: nowrap;
+
+  font-size: clamp(5rem, 15vw, 18rem);
+
+  font-weight: 450;
+
+  line-height: 0.9;
+
+  letter-spacing: -0.085em;
+
+  transform: translateY(100%);
+
+  will-change: transform;
+}
+
+/* =========================================
+   BLACK INTRO OVERLAY
+========================================= */
+
+.hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: var(--dark);
+
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+
+  z-index: 2;
+
+  will-change: clip-path;
+
+  pointer-events: none;
+}
+
+/* =========================================
+   COUNTER
+   IMPORTANT: WHITE ON BLACK
+========================================= */
+
+.counter {
+  position: absolute;
+
+  left: 50%;
+  bottom: 10svh;
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 2px;
+
+  height: var(--digit-h);
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+.digit-col {
+  display: flex;
+
+  flex-direction: column;
+
+  flex-shrink: 0;
+
+  will-change: transform;
+}
+
+.digit-col span {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 1.1rem;
+  height: var(--digit-h);
+
+  flex-shrink: 0;
+
+  font-size: 1.5rem;
+  font-weight: 450;
+
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* =========================================
+   HERO IMAGE WRAPPER
+========================================= */
+
+.hero-img-wrapper {
+  position: absolute;
+  top: calc(50% - 100px);
+  left: 50%;
+  width: 20%;
+  max-width: 250px;
+  aspect-ratio: 4 / 5;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  z-index: 10;
+  will-change: transform;
+}
+
+/* =========================================
+   INDIVIDUAL HERO IMAGES
+========================================= */
+
+.hero-img {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+
+  will-change: clip-path;
+
+  overflow: hidden;
+}
+
+.hero-img img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transform: scale(2);
+
+  will-change: transform;
+}
+
+/* =========================================
+   HERO COPY
+========================================= */
+
+.hero-copy {
+  position: absolute;
+
+  left: 50%;
+  bottom: 15svh;
+
+  transform: translateX(-50%);
+
+  width: 35%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 1.5rem;
+
+  text-align: center;
+
+  z-index: 4;
+}
+
+.hero-copy > p {
+  width: 100%;
+
+  font-size: 1.1rem;
+  font-weight: 450;
+
+  line-height: 1.45;
+}
+
+/* =========================================
+   HERO CALLOUT
+========================================= */
+
+.hero-callout {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.hero-callout p {
+  width: max-content;
+
+  font-size: 1.1rem;
+  font-weight: 500;
+
+  transform: translateY(100%);
+
+  opacity: 0;
+
+  will-change: transform, opacity;
+}
+
+/* =========================================
+   SPLIT TEXT
+========================================= */
+
+.line {
+  position: relative;
+
+  transform: translateY(100%);
+
+  will-change: transform;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+  position: fixed;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+
+  padding: var(--page-padding);
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 20;
+
+  pointer-events: none;
+}
+
+footer p {
+  font-size: 1.1rem;
+  font-weight: 450;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 2rem;
+  }
+
+  .nav-item a {
+    font-size: 0.95rem;
+  }
+
+  .nav-brand a {
+    font-size: 1.25rem;
+  }
+
+  .hero-img-wrapper {
+    width: 45%;
+    max-width: 260px;
+  }
+
+  .hero-copy {
+    width: 75%;
+    bottom: 17svh;
+  }
+
+  .marquee-track h1 {
+    font-size: 18vw;
+  }
+
+  .counter {
+    bottom: 9svh;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  :root {
+    --page-padding: 1.5rem;
+  }
+
+  .nav-item a {
+    font-size: 0.8rem;
+  }
+
+  .nav-brand a {
+    font-size: 1.1rem;
+  }
+
+  .hero-img-wrapper {
+    width: 65%;
+    max-width: 250px;
+  }
+
+  .hero-copy {
+    width: 88%;
+    bottom: 18svh;
+
+    gap: 1.1rem;
+  }
+
+  .hero-copy > p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .hero-callout p {
+    font-size: 0.9rem;
+  }
+
+  .marquee-track h1 {
+    font-size: 20vw;
+  }
+
+  .counter {
+    bottom: 9svh;
+  }
+
+  .digit-col span {
+    font-size: 1.25rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+  }
+}
