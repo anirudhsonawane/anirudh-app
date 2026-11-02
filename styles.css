@@ -5,9 +5,9 @@
 :root {
   --dark: #0f0f0f;
   --light: #ffffff;
+  --brand-blue: #202e64;
 
   --digit-h: 1.65rem;
-
   --page-padding: 3rem;
 }
 
@@ -21,30 +21,49 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+/* =========================================
+   GLOBAL SCROLL FIX
+========================================= */
+
+html {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-behavior: smooth;
+
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
+  position: relative;
+
+  width: 100%;
+  min-height: 100%;
+
   font-family: "Google Sans Flex", sans-serif;
 
   background: var(--light);
   color: var(--dark);
 
-  overflow: hidden;
+  /* IMPORTANT: NEVER DISABLE VERTICAL SCROLL */
+  overflow-x: hidden;
+  overflow-y: auto;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* =========================================
+   GLOBAL ELEMENTS
+========================================= */
+
 img {
   display: block;
-
   width: 100%;
   height: 100%;
-
   object-fit: cover;
 }
 
@@ -59,15 +78,37 @@ p {
   letter-spacing: -0.01em;
 }
 
+button {
+  font: inherit;
+}
+
+/* =========================================
+   MAIN PAGE
+========================================= */
+
+#main-content {
+  position: relative;
+
+  width: 100%;
+  min-height: 100svh;
+}
+
+/* =========================================
+   REACT MOUNT
+========================================= */
+
+#collections-root {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  min-height: 100svh;
+}
+
 /* =========================================
    NAVIGATION
 ========================================= */
-
-.nav {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
 
 .navigation {
   position: fixed;
@@ -76,7 +117,6 @@ p {
   left: 0;
 
   width: 100%;
-
   padding: var(--page-padding);
 
   display: flex;
@@ -109,10 +149,33 @@ p {
   font-weight: 500;
 }
 
+/* =========================================
+   CENTRE LOGO
+========================================= */
+
+.nav-brand {
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(18px);
+}
+
 .nav-brand a {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.09em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo {
+  display: block;
+
+  width: 300px;
+  height: auto;
+  max-height: 80px;
+
+  object-fit: contain;
 }
 
 /* =========================================
@@ -127,14 +190,13 @@ p {
   height: 100svh;
 
   overflow: hidden;
-
   isolation: isolate;
 
   background: var(--light);
 }
 
 /* =========================================
-   MARQUEE
+   INFINITE MARQUEE
 ========================================= */
 
 .marquee {
@@ -148,7 +210,6 @@ p {
   transform: translateY(-75%);
 
   overflow: hidden;
-
   pointer-events: none;
 
   z-index: 1;
@@ -156,10 +217,10 @@ p {
 
 .marquee-track {
   display: flex;
-
   align-items: center;
 
   width: max-content;
+  flex-wrap: nowrap;
 
   will-change: transform;
 }
@@ -172,11 +233,9 @@ p {
   white-space: nowrap;
 
   font-size: clamp(5rem, 15vw, 18rem);
-
   font-weight: 450;
 
   line-height: 0.9;
-
   letter-spacing: -0.085em;
 
   transform: translateY(100%);
@@ -190,7 +249,6 @@ p {
 
 .hero-overlay {
   position: absolute;
-
   inset: 0;
 
   width: 100%;
@@ -203,13 +261,11 @@ p {
   z-index: 2;
 
   will-change: clip-path;
-
   pointer-events: none;
 }
 
 /* =========================================
    COUNTER
-   IMPORTANT: WHITE ON BLACK
 ========================================= */
 
 .counter {
@@ -221,7 +277,6 @@ p {
   transform: translateX(-50%);
 
   display: flex;
-
   align-items: flex-start;
   justify-content: center;
 
@@ -234,13 +289,11 @@ p {
   color: #ffffff;
 
   z-index: 3;
-
   pointer-events: none;
 }
 
 .digit-col {
   display: flex;
-
   flex-direction: column;
 
   flex-shrink: 0;
@@ -250,7 +303,6 @@ p {
 
 .digit-col span {
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -272,14 +324,21 @@ p {
 
 .hero-img-wrapper {
   position: absolute;
+
   top: calc(50% - 100px);
   left: 50%;
+
   width: 20%;
   max-width: 250px;
+
   aspect-ratio: 4 / 5;
+
   transform: translate(-50%, -50%);
+
   overflow: hidden;
+
   z-index: 10;
+
   will-change: transform;
 }
 
@@ -289,7 +348,6 @@ p {
 
 .hero-img {
   position: absolute;
-
   inset: 0;
 
   width: 100%;
@@ -328,9 +386,7 @@ p {
   width: 35%;
 
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
 
@@ -357,8 +413,96 @@ p {
 .hero-callout {
   position: relative;
 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: fit-content;
+  max-width: 100%;
+
+  padding: 12px 16px;
+
   overflow: hidden;
 }
+
+/* =========================================
+   CALLOUT BORDER BASE
+========================================= */
+
+.hero-callout-border {
+  position: absolute;
+
+  display: block;
+
+  background: var(--dark);
+
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* =========================================
+   TOP BORDER
+========================================= */
+
+.hero-callout-border-top {
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 1px;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* =========================================
+   RIGHT BORDER
+========================================= */
+
+.hero-callout-border-right {
+  top: 0;
+  right: 0;
+
+  width: 1px;
+  height: 100%;
+
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+/* =========================================
+   BOTTOM BORDER
+========================================= */
+
+.hero-callout-border-bottom {
+  right: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 1px;
+
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+/* =========================================
+   LEFT BORDER
+========================================= */
+
+.hero-callout-border-left {
+  top: 0;
+  left: 0;
+
+  width: 1px;
+  height: 100%;
+
+  transform: scaleY(0);
+  transform-origin: center bottom;
+}
+
+/* =========================================
+   CALLOUT TEXT
+========================================= */
 
 .hero-callout p {
   width: max-content;
@@ -366,8 +510,12 @@ p {
   font-size: 1.1rem;
   font-weight: 500;
 
-  transform: translateY(100%);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 
+  white-space: nowrap;
+
+  transform: translateY(100%);
   opacity: 0;
 
   will-change: transform, opacity;
@@ -396,11 +544,9 @@ footer {
   bottom: 0;
 
   width: 100%;
-
   padding: var(--page-padding);
 
   display: flex;
-
   justify-content: space-between;
   align-items: center;
 
@@ -412,6 +558,199 @@ footer {
 footer p {
   font-size: 1.1rem;
   font-weight: 450;
+}
+
+/* =========================================
+   FOOTER COPYRIGHT
+========================================= */
+
+.footer-copyright {
+  overflow: hidden;
+}
+
+/* =========================================
+   FOOTER ACTIONS
+========================================= */
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  pointer-events: auto;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(18px);
+
+  will-change: transform, opacity;
+}
+
+/* =========================================
+   OUR SELECTION BUTTON
+========================================= */
+
+.selection-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  width: 143px;
+  height: 37px;
+
+  padding: 0 10px;
+
+  border: 1px solid var(--brand-blue);
+  background: transparent;
+
+  color: var(--brand-blue);
+
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.selection-button:hover {
+  background: var(--brand-blue);
+  color: #ffffff;
+}
+
+/* =========================================
+   SELECTION GRID ICON
+========================================= */
+
+.selection-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 5px);
+  grid-template-rows: repeat(2, 5px);
+
+  gap: 3px;
+}
+
+.selection-grid i {
+  display: block;
+
+  width: 5px;
+  height: 5px;
+
+  background: currentColor;
+}
+
+/* =========================================
+   MENU BUTTON
+========================================= */
+
+.footer-menu-button {
+  width: 41px;
+  height: 37px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: flex-start;
+
+  gap: 5px;
+
+  padding: 0 11px;
+
+  border: 1px solid var(--brand-blue);
+  background: var(--brand-blue);
+
+  cursor: pointer;
+
+  transition: background 0.3s ease;
+}
+
+.footer-menu-button:hover {
+  background: #304580;
+}
+
+.footer-menu-button span {
+  display: block;
+
+  width: 17px;
+  height: 2px;
+
+  background: #ffffff;
+}
+
+.footer-menu-button span:last-child {
+  width: 11px;
+}
+
+/* =========================================
+   CUSTOM HOVER CURSOR
+========================================= */
+
+.hover-cursor {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: rgba(15, 15, 15, 0.28);
+
+  pointer-events: none;
+  z-index: 9999;
+
+  opacity: 0;
+
+  transform: translate(-50%, -50%) scale(0.65);
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  will-change: transform, left, top;
+}
+
+.hover-cursor.is-visible {
+  opacity: 1;
+
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.hover-cursor.is-hovering {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* =========================================
+   CUSTOM CURSOR TARGETS
+========================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active .custom-cursor-target {
+    cursor: none;
+  }
+
+  .nav-brand a,
+  .nav-brand a img {
+    cursor: auto !important;
+  }
+}
+
+/* =========================================
+   TOUCH DEVICES
+========================================= */
+
+@media (hover: none), (pointer: coarse) {
+  .hover-cursor {
+    display: none;
+  }
 }
 
 /* =========================================
@@ -427,12 +766,14 @@ footer p {
     font-size: 0.95rem;
   }
 
-  .nav-brand a {
-    font-size: 1.25rem;
+  .nav-logo {
+    width: 125px;
+    max-height: 56px;
   }
 
   .hero-img-wrapper {
     width: 45%;
+    height: auto;
     max-width: 260px;
   }
 
@@ -463,8 +804,9 @@ footer p {
     font-size: 0.8rem;
   }
 
-  .nav-brand a {
-    font-size: 1.1rem;
+  .nav-logo {
+    width: 105px;
+    max-height: 48px;
   }
 
   .hero-img-wrapper {
@@ -484,8 +826,13 @@ footer p {
     line-height: 1.4;
   }
 
+  .hero-callout {
+    padding: 8px 10px;
+  }
+
   .hero-callout p {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
   }
 
   .marquee-track h1 {
@@ -502,5 +849,49 @@ footer p {
 
   footer p {
     font-size: 0.8rem;
+  }
+
+  .footer-actions {
+    gap: 5px;
+  }
+
+  .selection-button {
+    width: 125px;
+    height: 35px;
+
+    gap: 8px;
+
+    padding: 0 10px;
+
+    font-size: 0.72rem;
+  }
+
+  .selection-grid {
+    grid-template-columns: repeat(2, 5px);
+    grid-template-rows: repeat(2, 5px);
+
+    gap: 3px;
+  }
+
+  .selection-grid i {
+    width: 5px;
+    height: 5px;
+  }
+
+  .footer-menu-button {
+    width: 39px;
+    height: 35px;
+
+    padding: 0 10px;
+    gap: 5px;
+  }
+
+  .footer-menu-button span {
+    width: 17px;
+    height: 2px;
+  }
+
+  .footer-menu-button span:last-child {
+    width: 11px;
   }
 }

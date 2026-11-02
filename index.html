@@ -2,53 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta
       name="description"
-      content="Lumen — Long Exposure. An archive of people, places and moments."
+      content="Realevate — Exceptional real estate. Discover extraordinary properties, distinctive architecture and elevated living."
     />
 
     <meta name="theme-color" content="#0f0f0f" />
+    <meta name="author" content="Realevate" />
 
-    <title>Realevate — Long Exposure</title>
+    <title>Realevate | Exceptional Real Estate</title>
 
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
       rel="stylesheet"
     />
 
+    <!-- First Page CSS -->
     <link rel="stylesheet" href="/styles.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
   <body>
-    <!-- NAVIGATION -->
+    <!-- ==========================================
+         FIRST PAGE
+    =========================================== -->
 
-    <nav class="navigation">
-      <div class="nav-item">
-        <a href="#archive">Archive</a>
-      </div>
+    <main id="main-content">
+      <!-- NAVIGATION -->
+      <nav class="navigation">
+        <div class="nav-item">
+          <a href="#archive">Archive</a>
+        </div>
 
-      <div class="nav-item nav-brand">
-        <a href="/" aria-label="Lumen Home">LUMEN</a>
-      </div>
+        <div class="nav-item nav-brand">
+          <a href="/" aria-label="Realevate Home">
+            <img src="/brand-logo.png" alt="Realevate" class="nav-logo" />
+          </a>
+        </div>
 
-      <div class="nav-item">
-        <a href="#commission">Commission</a>
-      </div>
-    </nav>
+        <div class="nav-item">
+          <a href="#commission">Commission</a>
+        </div>
+      </nav>
 
-    <!-- MAIN -->
-
-    <main>
+      <!-- HERO -->
       <section class="hero" id="archive">
         <!-- MARQUEE -->
-
         <div class="marquee">
           <div class="marquee-track">
             <h1>Long Exposure</h1>
@@ -59,74 +67,139 @@
         </div>
 
         <!-- BLACK INTRO OVERLAY -->
-
         <div class="hero-overlay">
-          <!-- COUNTER MUST STAY INSIDE THE OVERLAY -->
-
           <div class="counter" aria-label="Image counter">
             <div class="digit-col"></div>
-
             <div class="digit-col"></div>
           </div>
         </div>
 
         <!-- IMAGE REVEAL -->
-
         <div class="hero-img-wrapper">
           <div class="hero-img">
             <img
               src="/images/img1.webp"
-              alt="Editorial photograph one"
+              alt="Architectural editorial photograph one"
               fetchpriority="high"
             />
           </div>
 
           <div class="hero-img">
-            <img src="/images/img2.webp" alt="Editorial photograph two" />
+            <img
+              src="/images/img2.webp"
+              alt="Architectural editorial photograph two"
+              loading="lazy"
+            />
           </div>
 
           <div class="hero-img">
-            <img src="/images/img3.webp" alt="Editorial photograph three" />
+            <img
+              src="/images/img3.webp"
+              alt="Architectural editorial photograph three"
+              loading="lazy"
+            />
           </div>
 
           <div class="hero-img">
-            <img src="/images/img4.webp" alt="Editorial photograph four" />
+            <img
+              src="/images/img4.webp"
+              alt="Architectural editorial photograph four"
+              loading="lazy"
+            />
           </div>
 
           <div class="hero-img">
-            <img src="/images/img5.webp" alt="Editorial photograph five" />
+            <img
+              src="/images/img5.webp"
+              alt="Architectural editorial photograph five"
+              loading="lazy"
+            />
           </div>
 
           <div class="hero-img">
-            <img src="/images/img6.webp" alt="Editorial photograph six" />
+            <img
+              src="/images/img6.webp"
+              alt="Architectural editorial photograph six"
+              loading="lazy"
+            />
           </div>
         </div>
 
         <!-- HERO DESCRIPTION -->
-
         <div class="hero-copy">
           <p>
             A growing archive of people, places and the small moments between
             them.
           </p>
 
+          <!-- CALLOUT -->
           <div class="hero-callout">
+            <span
+              class="hero-callout-border hero-callout-border-top"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="hero-callout-border hero-callout-border-right"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="hero-callout-border hero-callout-border-bottom"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="hero-callout-border hero-callout-border-left"
+              aria-hidden="true"
+            ></span>
+
             <p>Exhibition Opens 14 Nov</p>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- FOOTER -->
+    <!-- ==========================================
+         SECOND PAGE — REACT COLLECTIONS
+    =========================================== -->
+
+    <div id="collections-root"></div>
+
+    <!-- ==========================================
+         GLOBAL FOOTER
+    =========================================== -->
 
     <footer>
-      <p>Lumen &copy; 2026</p>
+      <p class="footer-copyright">Lumen &copy; 2026</p>
 
-      <p>Est. Copenhagen</p>
+      <div class="footer-actions">
+        <a href="#selection" class="selection-button">
+          <span>Our Selection</span>
+
+          <span class="selection-grid" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </a>
+
+        <button class="footer-menu-button" type="button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </footer>
 
-    <!-- JAVASCRIPT -->
+    <!-- CUSTOM HOVER CURSOR -->
+    <div class="hover-cursor" aria-hidden="true"></div>
+
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
 
     <script type="module" src="/script.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
