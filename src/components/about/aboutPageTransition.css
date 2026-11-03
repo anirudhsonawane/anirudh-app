@@ -1,0 +1,528 @@
+/* ==========================================
+   ABOUT PAGE
+========================================== */
+
+.about-page,
+.about-page * {
+  box-sizing: border-box;
+}
+
+.about-page {
+  position: relative;
+
+  width: 100%;
+  height: 100svh;
+  min-height: 600px;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  font-family: "Google Sans Flex", sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.about-hero {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  background: #5487a8;
+}
+
+/* ==========================================
+   BACKGROUND IMAGE
+========================================== */
+
+.about-background {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.about-background img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* ==========================================
+   NAVIGATION
+   SAME STRUCTURE AS HOMEPAGE
+========================================== */
+
+.about-page .about-navigation {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  z-index: 20;
+
+  width: 100%;
+
+  padding: var(--page-padding, 3rem);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* NAV ITEMS */
+
+.about-page .about-navigation .nav-item {
+  flex: 1 1 0;
+
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+.about-page .about-navigation .nav-left {
+  justify-content: flex-start;
+}
+
+.about-page .about-navigation .nav-brand {
+  justify-content: center;
+
+  opacity: 1;
+  visibility: visible;
+
+  transform: none;
+}
+
+.about-page .about-navigation .nav-right {
+  justify-content: flex-end;
+}
+
+/* NAVIGATION LINKS */
+
+.about-page .about-navigation .nav-item a {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: auto;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  line-height: 1.2;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition: opacity 0.3s ease;
+}
+
+.about-page .about-navigation .nav-item a:hover {
+  opacity: 0.65;
+}
+
+/* CENTER BRAND */
+
+.about-page .about-navigation .nav-brand a {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+/* LOGO */
+
+.about-page .about-navigation .nav-logo {
+  display: block;
+
+  width: 300px;
+  height: auto;
+
+  max-height: 50px;
+
+  object-fit: contain;
+
+  background: transparent;
+
+  /* Blend white pixels of the source image
+     into the background photograph. */
+
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================
+   ABOUT US MARQUEE
+========================================== */
+
+.about-marquee {
+  position: absolute;
+
+  top: 45%;
+  left: 0;
+
+  z-index: 2;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  transform: translate3d(0, -50%, 0);
+
+  pointer-events: none;
+}
+
+/* ==========================================
+   MARQUEE TRACK
+========================================== */
+
+.about-marquee-track {
+  display: flex;
+
+  align-items: center;
+
+  width: max-content;
+
+  flex-wrap: nowrap;
+
+  gap: 0;
+
+  transform: translate3d(0, 0, 0);
+
+  will-change: transform;
+
+  backface-visibility: hidden;
+
+  animation: about-marquee-loop 30s linear infinite;
+
+  /* Wait for the intended font before movement. */
+
+  animation-play-state: paused;
+}
+
+html.about-font-ready .about-marquee-track {
+  animation-play-state: running;
+}
+
+/* ==========================================
+   MARQUEE GROUPS
+   TWO IDENTICAL GROUPS
+========================================== */
+
+.about-marquee-group {
+  display: flex;
+
+  flex: 0 0 auto;
+
+  align-items: center;
+
+  flex-wrap: nowrap;
+
+  gap: clamp(2rem, 4vw, 5rem);
+
+  padding-right: clamp(2rem, 4vw, 5rem);
+}
+
+/* ==========================================
+   MARQUEE TYPOGRAPHY
+========================================== */
+
+.about-marquee-group h1 {
+  display: block;
+
+  flex: 0 0 auto;
+
+  margin: 0;
+  padding: 0;
+
+  color: #ffffff;
+
+  font-family: "Google Sans Flex", sans-serif;
+
+  font-size: clamp(7rem, 11.5vw, 12rem);
+
+  font-weight: 650;
+
+  letter-spacing: -0.075em;
+
+  line-height: 0.95;
+
+  white-space: nowrap;
+
+  backface-visibility: hidden;
+}
+
+/* ==========================================
+   SEAMLESS INFINITE ANIMATION
+========================================== */
+
+@keyframes about-marquee-loop {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ==========================================
+   BOTTOM NAVIGATION
+========================================== */
+
+.about-bottom {
+  position: absolute;
+
+  right: 3.1rem;
+  bottom: 4rem;
+  left: 3.1rem;
+
+  z-index: 10;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==========================================
+   SCROLL INDICATOR
+========================================== */
+
+.about-scroll span {
+  color: #ffffff;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ==========================================
+   BOTTOM ACTIONS
+========================================== */
+
+.about-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+/* ==========================================
+   OUR SELECTION
+========================================== */
+
+.about-selection {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  width: 144px;
+  height: 38px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.75);
+
+  color: #ffffff;
+
+  background: transparent;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.about-selection:hover {
+  color: #111111;
+
+  background: #ffffff;
+}
+
+/* ==========================================
+   SELECTION GRID ICON
+========================================== */
+
+.about-selection-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 4px);
+  grid-template-rows: repeat(2, 4px);
+
+  gap: 2px;
+}
+
+.about-selection-grid i {
+  display: block;
+
+  width: 4px;
+  height: 4px;
+
+  background: currentColor;
+}
+
+/* ==========================================
+   MENU BUTTON
+========================================== */
+
+.about-menu {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 5px;
+
+  width: 41px;
+  height: 38px;
+
+  padding: 0 11px;
+
+  border: 1px solid #ffffff;
+
+  background: #ffffff;
+
+  cursor: pointer;
+}
+
+.about-menu span {
+  display: block;
+
+  width: 16px;
+  height: 2px;
+
+  background: #202e64;
+}
+
+.about-menu span:last-child {
+  width: 10px;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 768px) {
+  .about-page .about-navigation {
+    padding: 2rem;
+  }
+
+  .about-page .about-navigation .nav-item a {
+    font-size: 0.95rem;
+  }
+
+  .about-page .about-navigation .nav-logo {
+    width: 125px;
+    max-height: 56px;
+  }
+
+  .about-bottom {
+    right: 2rem;
+    bottom: 3rem;
+    left: 2rem;
+  }
+
+  .about-marquee-group h1 {
+    font-size: 15vw;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+  .about-page {
+    min-height: 500px;
+  }
+
+  .about-page .about-navigation {
+    padding: 1.5rem;
+  }
+
+  .about-page .about-navigation .nav-item a {
+    font-size: 0.8rem;
+  }
+
+  .about-page .about-navigation .nav-logo {
+    width: 105px;
+    max-height: 48px;
+  }
+
+  .about-marquee {
+    top: 43%;
+  }
+
+  .about-marquee-group h1 {
+    font-size: 19vw;
+  }
+
+  .about-bottom {
+    right: 1.5rem;
+    bottom: 2rem;
+    left: 1.5rem;
+  }
+
+  .about-scroll span {
+    font-size: 0.75rem;
+  }
+
+  .about-selection {
+    width: 125px;
+    height: 35px;
+
+    gap: 8px;
+
+    font-size: 0.7rem;
+  }
+
+  .about-menu {
+    width: 38px;
+    height: 35px;
+
+    padding: 0 10px;
+  }
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee-track {
+    animation: none;
+    transform: none;
+  }
+}

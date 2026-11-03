@@ -2,7 +2,7 @@ import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
 
-document.addEventListener("DOMContentLoaded", () => {
+const initializeHomepage = () => {
   gsap.registerPlugin(CustomEase, SplitText);
 
   CustomEase.create("hop", "0.8, 0, 0.02, 1");
@@ -99,7 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
     counterColumns.forEach((column) => {
       for (let digit = 0; digit <= 9; digit++) {
         const digitElement = document.createElement("span");
+
         digitElement.textContent = digit;
+
         column.appendChild(digitElement);
       }
     });
@@ -689,4 +691,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
-});
+};
+
+// ==========================================
+// SAFE HOMEPAGE INITIALIZATION
+// ==========================================
+
+let homepageInitialized = false;
+
+const startHomepage = () => {
+  if (homepageInitialized) return;
+
+  homepageInitialized = true;
+
+  initializeHomepage();
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startHomepage, { once: true });
+} else {
+  startHomepage();
+}
