@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
       calloutTop,
       {
         scaleX: 1,
-        duration: 0.55,
+        duration: 0.22,
         ease: "power2.inOut",
       },
       "<0.125",
@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
       calloutRight,
       {
         scaleY: 1,
-        duration: 0.35,
+        duration: 0.33,
         ease: "power2.inOut",
       },
       ">-0.02",
@@ -349,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
       calloutBottom,
       {
         scaleX: 1,
-        duration: 0.55,
+        duration: 0.33,
         ease: "power2.inOut",
       },
       ">-0.02",
@@ -363,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
       calloutLeft,
       {
         scaleY: 1,
-        duration: 0.35,
+        duration: 0.33,
         ease: "power2.inOut",
       },
       ">-0.02",

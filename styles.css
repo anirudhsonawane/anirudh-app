@@ -22,35 +22,34 @@
 }
 
 /* =========================================
-   GLOBAL SCROLL FIX
+   GLOBAL DOCUMENT SCROLL
 ========================================= */
 
 html {
   width: 100%;
+  height: auto;
   min-height: 100%;
 
-  overflow-x: hidden;
+  overflow-x: clip;
   overflow-y: auto;
 
   scroll-behavior: smooth;
-
-  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
 }
 
 body {
   position: relative;
 
   width: 100%;
-  min-height: 100%;
+  height: auto;
+  min-height: 100vh;
 
   font-family: "Google Sans Flex", sans-serif;
 
   background: var(--light);
   color: var(--dark);
 
-  /* IMPORTANT: NEVER DISABLE VERTICAL SCROLL */
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: visible;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -99,11 +98,13 @@ button {
 
 #collections-root {
   position: relative;
-
   display: block;
 
   width: 100%;
-  min-height: 100svh;
+  height: auto;
+  min-height: 0;
+
+  overflow: visible;
 }
 
 /* =========================================
@@ -894,4 +895,27 @@ footer p {
   .footer-menu-button span:last-child {
     width: 11px;
   }
+}
+
+/* =========================================
+   FINAL DOCUMENT SCROLL SAFEGUARD
+========================================= */
+
+html,
+body {
+  max-height: none;
+}
+
+body {
+  overflow-y: visible;
+}
+
+#main-content,
+#collections-root,
+.services-page,
+.services-list {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow-y: visible;
 }
