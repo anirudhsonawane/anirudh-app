@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta
@@ -15,12 +14,8 @@
 
     <title>Realevate | Exceptional Real Estate</title>
 
-    <!-- ==========================================
-         GOOGLE FONTS
-    =========================================== -->
-
+    <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
@@ -28,11 +23,24 @@
       rel="stylesheet"
     />
 
-    <!-- ==========================================
-         ABOUT FONT INITIALIZATION
-         ABOUT ROUTE ONLY
-    =========================================== -->
+    <!-- ROUTE DETECTION: BEFORE REACT RENDERS -->
+    <script>
+      (() => {
+        const route = window.location.pathname.replace(/\/+$/, "") || "/";
 
+        document.documentElement.classList.toggle(
+          "about-route",
+          route === "/about",
+        );
+
+        document.documentElement.classList.toggle(
+          "contact-route",
+          route === "/contact",
+        );
+      })();
+    </script>
+
+    <!-- ABOUT FONT INITIALIZATION -->
     <script>
       (() => {
         const route = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -54,62 +62,47 @@
       })();
     </script>
 
-    <!-- ==========================================
-         EXISTING STYLES
-    =========================================== -->
-
+    <!-- GLOBAL STYLES -->
     <link rel="stylesheet" href="/styles.css" />
-
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- ==========================================
-         ABOUT ROUTE DETECTION
-         RUN BEFORE PAGE RENDER
-    =========================================== -->
-
-    <script>
-      (() => {
-        const route = window.location.pathname.replace(/\/+$/, "") || "/";
-
-        if (route === "/about") {
-          document.documentElement.classList.add("about-route");
-        }
-      })();
-    </script>
-
-    <!-- ==========================================
-         ABOUT ROUTE ISOLATION
-    =========================================== -->
-
+    <!-- SECONDARY PAGE ISOLATION -->
     <style>
       html.about-route,
-      html.about-route body {
+      html.contact-route,
+      html.about-route body,
+      html.contact-route body {
         width: 100%;
         height: 100%;
         overflow: hidden;
       }
 
-      html.about-route body {
+      html.about-route body,
+      html.contact-route body {
         min-height: 100svh;
         background: #ffffff;
       }
 
-      /* Hide the existing homepage on About route */
+      /* Hide homepage and collections on secondary pages */
 
       html.about-route #transition-scene,
       html.about-route #collections-root,
-      html.about-route .hover-cursor {
+      html.contact-route #transition-scene,
+      html.contact-route #collections-root {
         display: none !important;
       }
 
-      /* React About mount */
+      /* Isolated React page mount */
 
-      html.about-route #app-root {
+      html.about-route #app-root,
+      html.contact-route #app-root {
         position: fixed;
         inset: 0;
         z-index: 1000;
+
         width: 100%;
         height: 100svh;
+
         overflow: hidden;
       }
     </style>
@@ -117,13 +110,11 @@
 
   <body>
     <!-- ==========================================
-         HOMEPAGE + UNDERNEATH COLLECTION TRANSITION
+         HOMEPAGE + COLLECTION TRANSITION
     =========================================== -->
 
     <div class="transition-scene" id="transition-scene">
-      <!-- ========================================
-           FOUR COLLECTION PANELS UNDERNEATH
-      ========================================= -->
+      <!-- FOUR COLLECTION PANELS -->
 
       <section
         class="underneath-grid"
@@ -248,7 +239,7 @@
       </section>
 
       <!-- ==========================================
-           EXISTING HOMEPAGE
+           HOMEPAGE
       =========================================== -->
 
       <main id="main-content">
@@ -270,13 +261,11 @@
           </div>
 
           <div class="nav-item">
-            <a href="#commission">Contact Us</a>
+            <a href="/contact">Contact Us</a>
           </div>
         </nav>
 
-        <!-- ========================================
-             HERO
-        ========================================= -->
+        <!-- HERO -->
 
         <section class="hero" id="archive">
           <!-- MARQUEE -->
@@ -387,9 +376,7 @@
           </div>
         </section>
 
-        <!-- ========================================
-             EXISTING FOOTER
-        ========================================= -->
+        <!-- FOOTER -->
 
         <footer>
           <p class="footer-copyright">Lumen &copy; 2026</p>
@@ -419,38 +406,28 @@
       </main>
     </div>
 
-    <!-- ==========================================
-         EXISTING REACT COLLECTIONS
-    =========================================== -->
+    <!-- EXISTING REACT COLLECTIONS -->
 
     <div id="collections-root"></div>
 
-    <!-- CUSTOM HOVER CURSOR -->
-
-    <div class="hover-cursor" aria-hidden="true"></div>
-
-    <!-- ==========================================
-         REACT APPLICATION MOUNT
-    =========================================== -->
+    <!-- REACT APPLICATION MOUNT -->
 
     <div id="app-root"></div>
 
     <!-- ==========================================
-         GSAP HOMEPAGE INITIALIZATION
+         HOMEPAGE GSAP INITIALIZATION
          HOMEPAGE ONLY
     =========================================== -->
 
     <script type="module">
       const route = window.location.pathname.replace(/\/+$/, "") || "/";
 
-      if (route !== "/about") {
+      if (route === "/") {
         await import("/script.js");
       }
     </script>
 
-    <!-- ==========================================
-         REACT ENTRY
-    =========================================== -->
+    <!-- REACT ENTRY -->
 
     <script type="module" src="/src/main.tsx"></script>
   </body>

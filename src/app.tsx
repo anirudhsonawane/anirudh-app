@@ -1,13 +1,19 @@
 import About from "./components/about/about";
+import ContactUS from "./components/contact-us/contactUS";
 
 function App() {
-  const currentPath = window.location.pathname.replace(/\/+$/, "");
+  const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
 
-  if (currentPath === "/about") {
-    return <About />;
+  switch (currentPath) {
+    case "/about":
+      return <About />;
+
+    case "/contact":
+      return <ContactUS />;
+
+    default:
+      return null;
   }
-
-  return null;
 }
 
 export default App;

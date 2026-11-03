@@ -42,7 +42,7 @@ const About = () => {
           {/* RIGHT NAVIGATION */}
 
           <div className="nav-item nav-right">
-            <a href="/#commission">Contact Us</a>
+            <a href="/contact">Contact Us</a>
           </div>
         </nav>
 
