@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import "./contactPageTransition.css";
 
 type ContactTab = "investors" | "partnership";
@@ -6,13 +6,13 @@ type ContactTab = "investors" | "partnership";
 function ContactUS() {
   const [activeTab, setActiveTab] = useState<ContactTab>("investors");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
   return (
     <main className="contact-page">
-      {/* SHARED WEBSITE NAVIGATION */}
+      {/* NAVIGATION */}
 
       <nav className="navigation contact-navigation">
         <div className="nav-item">
@@ -34,19 +34,26 @@ function ContactUS() {
         </div>
       </nav>
 
-      {/* MAIN CONTACT CONTENT */}
+      {/* CONTACT CONTENT */}
 
       <section className="contact-content">
-        {/* VERTICAL CONTACT TITLE */}
+        {/* INFINITE VERTICAL CONTACT MARQUEE */}
 
         <div className="contact-title-container" aria-hidden="true">
           <div className="contact-title-track">
-            <span>Contact</span>
-            <span>Contact</span>
-            <span>Contact</span>
-            <span>Contact</span>
-            <span>Contact</span>
-            <span>Contact</span>
+            <div className="contact-title-group">
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+            </div>
+
+            <div className="contact-title-group" aria-hidden="true">
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+              <span className="contact-marquee-word">Contact</span>
+            </div>
           </div>
         </div>
 

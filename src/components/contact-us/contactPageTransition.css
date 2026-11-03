@@ -1,6 +1,6 @@
-/* ==========================================
+/* =====================================================
    CONTACT PAGE
-========================================== */
+===================================================== */
 
 .contact-page,
 .contact-page * {
@@ -26,14 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==========================================
+/* =====================================================
    NAVIGATION
-   SHARED WEBSITE NAVIGATION
-========================================== */
+===================================================== */
 
 .contact-page .contact-navigation {
   position: fixed;
-
   top: 0;
   left: 0;
 
@@ -43,7 +41,6 @@
   align-items: center;
 
   width: 100%;
-
   padding: var(--page-padding, 3rem);
 }
 
@@ -71,7 +68,6 @@
   color: #111111;
 
   font-family: "Google Sans Flex", sans-serif;
-
   font-size: 1.1rem;
   font-weight: 500;
 
@@ -104,13 +100,12 @@
   object-fit: contain;
 }
 
-/* ==========================================
-   MAIN CONTACT LAYOUT
-========================================== */
+/* =====================================================
+   MAIN GRID
+===================================================== */
 
 .contact-content {
   position: absolute;
-
   inset: 0;
 
   display: grid;
@@ -120,82 +115,94 @@
   width: 100%;
   height: 100%;
 
-  padding-top: 100px;
+  padding-top: 0;
   padding-bottom: 55px;
 }
 
-/* ==========================================
-   CONTACT TYPOGRAPHY CONTAINER
-========================================== */
-
-/*
-   IMPORTANT:
-
-   The content grid starts 100px below the
-   viewport top because of its padding.
-
-   Move the typography container upward by
-   exactly 100px so the text occupies the
-   complete viewport, including the navbar area.
-
-   The navbar remains above the typography.
-*/
+/* =====================================================
+   SEAMLESS VERTICAL CONTACT MARQUEE
+   Exact-distance duplicated-track loop (Safari-safe)
+===================================================== */
 
 .contact-title-container {
-  position: relative;
+  --contact-marquee-size: clamp(145px, 16vw, 250px);
+  --contact-word-step: calc(var(--contact-marquee-size) * 3.35);
 
+  /*
+   * Four words per group. The group has no extra flex gap or
+   * trailing padding, so its height is exactly four word steps.
+   * The animation uses this same measured distance in pixels,
+   * rather than translating by a percentage of the whole track.
+   */
+  --contact-group-height: calc(
+    var(--contact-word-step) + var(--contact-word-step) +
+      var(--contact-word-step) + var(--contact-word-step)
+  );
+
+  position: relative;
   z-index: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   width: 100%;
+  height: calc(100% + 55px);
   min-width: 0;
-
-  height: calc(100% + 100px);
-
-  margin-top: -100px;
-
-  align-self: stretch;
+  margin-bottom: -55px;
 
   overflow: hidden;
-
   pointer-events: none;
 }
 
-/* ==========================================
-   CONTINUOUS CONTACT TEXT TRACK
-========================================== */
-
 .contact-title-track {
   position: absolute;
+  top: 0;
+  left: 50%;
 
   display: flex;
-  flex-direction: row;
-
+  flex-direction: column;
   align-items: center;
 
-  width: max-content;
+  width: 100%;
+  height: max-content;
+  margin: 0;
+  padding: 0;
+  gap: 0;
 
-  gap: 0.15em;
+  /*
+   * Keep the track on one compositor layer. No animation delay
+   * or entrance offset: it starts moving immediately.
+   */
+  transform: translate3d(-50%, 0, 0);
+  animation: contact-marquee-seamless 30s linear infinite;
 
-  transform: rotate(-90deg);
-  transform-origin: center center;
-
-  animation: contact-title-movement 24s linear infinite;
-
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   will-change: transform;
 }
 
-/* ==========================================
-   CONTACT WORD
-========================================== */
+.contact-title-group {
+  display: flex;
+  flex: 0 0 var(--contact-group-height);
+  flex-direction: column;
+  align-items: center;
 
-.contact-title-track span {
-  display: block;
+  width: 100%;
+  height: var(--contact-group-height);
+  min-height: var(--contact-group-height);
+  margin: 0;
+  padding: 0;
+  gap: 0;
 
-  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+.contact-marquee-word {
+  display: flex;
+  flex: 0 0 var(--contact-word-step);
+  align-items: center;
+  justify-content: center;
+
+  width: 1em;
+  height: var(--contact-word-step);
+  min-height: var(--contact-word-step);
 
   margin: 0;
   padding: 0;
@@ -203,38 +210,58 @@
   color: #1c2858;
 
   font-family: "Google Sans Flex", sans-serif;
-
-  font-size: clamp(150px, 17vw, 270px);
-
-  font-weight: 550;
+  font-size: var(--contact-marquee-size);
+  font-weight: 650;
 
   letter-spacing: -0.075em;
-  line-height: 0.9;
-
+  line-height: 0.95;
   white-space: nowrap;
+
+  writing-mode: horizontal-tb;
+  transform: rotate(-90deg);
+  transform-origin: center center;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* ==========================================
-   VERTICAL ANIMATION
-========================================== */
-
-@keyframes contact-title-movement {
-  0% {
-    transform: rotate(-90deg) translateX(0);
+/*
+ * The track contains exactly two equal groups.
+ * Move upward by exactly one group's explicit height.
+ * At the endpoint, group two occupies group one's starting
+ * position. The reset is therefore visually identical.
+ */
+@keyframes contact-marquee-seamless {
+  from {
+    transform: translate3d(-50%, 0, 0);
   }
 
-  100% {
-    transform: rotate(-90deg) translateX(-33.333%);
+  to {
+    transform: translate3d(-50%, calc(0px - var(--contact-group-height)), 0);
   }
 }
 
-/* ==========================================
+/* =====================================================
+   MARQUEE RESPONSIVE SIZING
+===================================================== */
+
+@media (max-width: 1024px) {
+  .contact-title-container {
+    --contact-marquee-size: clamp(135px, 17vw, 210px);
+    --contact-word-step: calc(var(--contact-marquee-size) * 3.35);
+    --contact-group-height: calc(
+      var(--contact-word-step) + var(--contact-word-step) +
+        var(--contact-word-step) + var(--contact-word-step)
+    );
+  }
+}
+
+/* =====================================================
    CONTACT INFORMATION
-========================================== */
+===================================================== */
 
 .contact-information {
   position: relative;
-
   z-index: 1;
 
   display: flex;
@@ -302,13 +329,12 @@
   opacity: 0.55;
 }
 
-/* ==========================================
+/* =====================================================
    CONTACT FORM CONTAINER
-========================================== */
+===================================================== */
 
 .contact-form-container {
   position: relative;
-
   z-index: 1;
 
   display: flex;
@@ -324,9 +350,9 @@
   padding-top: 75px;
 }
 
-/* ==========================================
+/* =====================================================
    FORM TABS
-========================================== */
+===================================================== */
 
 .contact-tabs {
   display: grid;
@@ -352,7 +378,6 @@
   padding: 0;
 
   border: none;
-
   background: transparent;
 
   color: #6c7390;
@@ -389,9 +414,9 @@
   color: #1c2858;
 }
 
-/* ==========================================
+/* =====================================================
    CONTACT FORM
-========================================== */
+===================================================== */
 
 .contact-form {
   display: flex;
@@ -402,9 +427,9 @@
   gap: 0;
 }
 
-/* ==========================================
+/* =====================================================
    INPUT FIELDS
-========================================== */
+===================================================== */
 
 .contact-field {
   position: relative;
@@ -429,7 +454,6 @@
 
   border: none;
   outline: none;
-
   border-radius: 0;
 
   background: transparent;
@@ -460,13 +484,12 @@
 
 .full-width {
   width: 100%;
-
   margin-bottom: 8px;
 }
 
-/* ==========================================
-   TWO COLUMN FORM GRID
-========================================== */
+/* =====================================================
+   TWO COLUMN GRID
+===================================================== */
 
 .contact-field-grid {
   display: grid;
@@ -483,9 +506,9 @@
   height: 42px;
 }
 
-/* ==========================================
+/* =====================================================
    SELECT FIELDS
-========================================== */
+===================================================== */
 
 .contact-field.select-field {
   position: relative;
@@ -511,13 +534,12 @@
 
 .contact-field select {
   padding-right: 18px;
-
   cursor: pointer;
 }
 
-/* ==========================================
+/* =====================================================
    MESSAGE
-========================================== */
+===================================================== */
 
 .contact-message-field {
   margin-top: 8px;
@@ -536,9 +558,9 @@
   padding-bottom: 10px;
 }
 
-/* ==========================================
+/* =====================================================
    CONSENT
-========================================== */
+===================================================== */
 
 .contact-consent {
   display: flex;
@@ -581,9 +603,9 @@
   text-underline-offset: 2px;
 }
 
-/* ==========================================
+/* =====================================================
    SEND BUTTON
-========================================== */
+===================================================== */
 
 .contact-submit {
   display: flex;
@@ -598,7 +620,6 @@
   border: 1px solid #1c2858;
 
   background: #1c2858;
-
   color: #ffffff;
 
   font-family: inherit;
@@ -618,9 +639,9 @@
   color: #1c2858;
 }
 
-/* ==========================================
+/* =====================================================
    TABLET
-========================================== */
+===================================================== */
 
 @media (max-width: 1024px) {
   .contact-content {
@@ -644,14 +665,15 @@
     padding-left: 3%;
   }
 
-  .contact-title-track span {
-    font-size: clamp(150px, 20vw, 240px);
+  .contact-title-container {
+    --contact-marquee-size: clamp(135px, 17vw, 210px);
+    --contact-word-step: calc(var(--contact-marquee-size) * 3.35);
   }
 }
 
-/* ==========================================
+/* =====================================================
    MOBILE
-========================================== */
+===================================================== */
 
 @media (max-width: 700px) {
   .contact-page {
@@ -664,7 +686,6 @@
 
   .contact-page .contact-navigation {
     position: relative;
-
     padding: 1.5rem;
   }
 
@@ -689,40 +710,40 @@
   }
 
   .contact-title-container {
+    --contact-marquee-size: clamp(105px, 22vw, 150px);
+    --contact-word-step: calc(var(--contact-marquee-size) * 3.35);
+    --contact-group-height: calc(
+      var(--contact-word-step) + var(--contact-word-step) +
+        var(--contact-word-step) + var(--contact-word-step)
+    );
+
     position: relative;
-
-    display: block;
-
     width: 100%;
-    height: auto;
-
-    margin: 0 0 35px;
-
-    overflow: visible;
+    height: 42svh;
+    min-height: 320px;
+    margin-bottom: 35px;
+    overflow: hidden;
   }
 
   .contact-title-track {
-    position: relative;
-
-    display: block;
-
+    position: absolute;
+    top: 0;
+    left: 50%;
     width: 100%;
-
-    transform: none;
-    animation: none;
+    animation-duration: 30s;
   }
 
-  .contact-title-track span {
-    display: none;
-
-    font-size: 18vw;
-    line-height: 1;
+  .contact-title-group {
+    flex-basis: var(--contact-group-height);
+    height: var(--contact-group-height);
+    min-height: var(--contact-group-height);
   }
 
-  .contact-title-track span:first-child {
-    display: block;
-
-    white-space: normal;
+  .contact-marquee-word {
+    flex-basis: var(--contact-word-step);
+    height: var(--contact-word-step);
+    min-height: var(--contact-word-step);
+    font-size: var(--contact-marquee-size);
   }
 
   .contact-information {
@@ -732,7 +753,6 @@
 
   .contact-intro {
     margin-bottom: 35px;
-
     font-size: 1.15rem;
   }
 
@@ -759,13 +779,14 @@
   }
 }
 
-/* ==========================================
+/* =====================================================
    REDUCED MOTION
-========================================== */
+===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .contact-title-track {
     animation: none;
+    transform: translate3d(-50%, 0, 0);
   }
 
   .contact-detail a,
