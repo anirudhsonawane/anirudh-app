@@ -14,192 +14,325 @@
 
     <title>Realevate | Exceptional Real Estate</title>
 
-    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
       rel="stylesheet"
     />
 
-    <!-- First Page CSS -->
     <link rel="stylesheet" href="/styles.css" />
-
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
   <body>
     <!-- ==========================================
-         FIRST PAGE
+         HOMEPAGE + UNDERNEATH COLLECTION TRANSITION
     =========================================== -->
 
-    <main id="main-content">
-      <!-- NAVIGATION -->
-      <nav class="navigation">
-        <div class="nav-item">
-          <a href="#archive">Archive</a>
-        </div>
+    <div class="transition-scene" id="transition-scene">
+      <!-- FOUR COLLECTION PANELS UNDERNEATH -->
 
-        <div class="nav-item nav-brand">
-          <a href="/" aria-label="Realevate Home">
-            <img src="/brand-logo.png" alt="Realevate" class="nav-logo" />
-          </a>
-        </div>
+      <section
+        class="underneath-grid"
+        id="underneath-grid"
+        aria-label="Explore our property collections"
+      >
+        <!-- BY THE SEA -->
 
-        <div class="nav-item">
-          <a href="#commission">Commission</a>
-        </div>
-      </nav>
+        <a class="collection-panel sea" href="#collections-root">
+          <div class="panel-top">
+            <img
+              class="panel-logo"
+              src="/Ascent™ Black Geometric Logo.png"
+              alt=""
+              aria-hidden="true"
+            />
 
-      <!-- HERO -->
-      <section class="hero" id="archive">
-        <!-- MARQUEE -->
-        <div class="marquee">
-          <div class="marquee-track">
-            <h1>Long Exposure</h1>
-            <h1>Long Exposure</h1>
-            <h1>Long Exposure</h1>
-            <h1>Long Exposure</h1>
+            <span class="panel-title">By The Sea</span>
+
+            <p>
+              Coastal, Marina &
+              <br />
+              Seafront properties
+            </p>
           </div>
-        </div>
 
-        <!-- BLACK INTRO OVERLAY -->
-        <div class="hero-overlay">
-          <div class="counter" aria-label="Image counter">
-            <div class="digit-col"></div>
-            <div class="digit-col"></div>
-          </div>
-        </div>
-
-        <!-- IMAGE REVEAL -->
-        <div class="hero-img-wrapper">
-          <div class="hero-img">
+          <div class="panel-image">
             <img
               src="/images/img1.webp"
-              alt="Architectural editorial photograph one"
-              fetchpriority="high"
+              alt="Coastal property"
+              loading="eager"
             />
           </div>
-
-          <div class="hero-img">
-            <img
-              src="/images/img2.webp"
-              alt="Architectural editorial photograph two"
-              loading="lazy"
-            />
-          </div>
-
-          <div class="hero-img">
-            <img
-              src="/images/img3.webp"
-              alt="Architectural editorial photograph three"
-              loading="lazy"
-            />
-          </div>
-
-          <div class="hero-img">
-            <img
-              src="/images/img4.webp"
-              alt="Architectural editorial photograph four"
-              loading="lazy"
-            />
-          </div>
-
-          <div class="hero-img">
-            <img
-              src="/images/img5.webp"
-              alt="Architectural editorial photograph five"
-              loading="lazy"
-            />
-          </div>
-
-          <div class="hero-img">
-            <img
-              src="/images/img6.webp"
-              alt="Architectural editorial photograph six"
-              loading="lazy"
-            />
-          </div>
-        </div>
-
-        <!-- HERO DESCRIPTION -->
-        <div class="hero-copy">
-          <p>
-            A growing archive of people, places and the small moments between
-            them.
-          </p>
-
-          <!-- CALLOUT -->
-          <div class="hero-callout">
-            <span
-              class="hero-callout-border hero-callout-border-top"
-              aria-hidden="true"
-            ></span>
-
-            <span
-              class="hero-callout-border hero-callout-border-right"
-              aria-hidden="true"
-            ></span>
-
-            <span
-              class="hero-callout-border hero-callout-border-bottom"
-              aria-hidden="true"
-            ></span>
-
-            <span
-              class="hero-callout-border hero-callout-border-left"
-              aria-hidden="true"
-            ></span>
-
-            <p>Exhibition Opens 14 Nov</p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- ==========================================
-         SECOND PAGE — REACT COLLECTIONS
-    =========================================== -->
-
-    <div id="collections-root"></div>
-
-    <!-- ==========================================
-         GLOBAL FOOTER
-    =========================================== -->
-
-    <footer>
-      <p class="footer-copyright">Lumen &copy; 2026</p>
-
-      <div class="footer-actions">
-        <a href="#selection" class="selection-button">
-          <span>Our Selection</span>
-
-          <span class="selection-grid" aria-hidden="true">
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-          </span>
         </a>
 
-        <button class="footer-menu-button" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-    </footer>
+        <!-- EVERGREEN -->
+
+        <a class="collection-panel evergreen" href="#collections-root">
+          <div class="panel-top">
+            <img
+              class="panel-logo"
+              src="/Ascent™ Black Geometric Logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <span class="panel-title">Evergreen</span>
+
+            <p>
+              Golf Resorts, parks &
+              <br />
+              Forest Oasis
+            </p>
+          </div>
+
+          <div class="panel-image">
+            <img
+              src="/images/img2.webp"
+              alt="Green residential landscape"
+              loading="eager"
+            />
+          </div>
+        </a>
+
+        <!-- URBAN LIVING -->
+
+        <a class="collection-panel urban" href="#collections-root">
+          <div class="panel-top">
+            <img
+              class="panel-logo"
+              src="/Ascent™ Black Geometric Logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <span class="panel-title">Urban Living</span>
+
+            <p>
+              City center & Old city
+              <br />
+              Vibes and lifestyle
+            </p>
+          </div>
+
+          <div class="panel-image">
+            <img
+              src="/images/img3.webp"
+              alt="Urban residential architecture"
+              loading="eager"
+            />
+          </div>
+        </a>
+
+        <!-- RARE GEMS -->
+
+        <a class="collection-panel gems" href="#collections-root">
+          <div class="panel-top">
+            <img
+              class="panel-logo"
+              src="/Ascent™ Black Geometric Logo.png"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <span class="panel-title">Rare Gems</span>
+
+            <p>
+              One of a kind & Unique
+              <br />
+              concept Properties
+            </p>
+          </div>
+
+          <div class="panel-image">
+            <img
+              src="/images/img4.webp"
+              alt="Distinctive property architecture"
+              loading="eager"
+            />
+          </div>
+        </a>
+      </section>
+
+      <!-- ==========================================
+           EXISTING HOMEPAGE
+      =========================================== -->
+
+      <main id="main-content">
+        <!-- NAVIGATION -->
+
+        <nav class="navigation">
+          <div class="nav-item">
+            <a href="#archive">About</a>
+          </div>
+
+          <div class="nav-item nav-brand">
+            <a href="/" aria-label="Realevate Home">
+              <img
+                src="/Ascent™ Black Geometric Logo.png"
+                alt="Realevate"
+                class="nav-logo"
+              />
+            </a>
+          </div>
+
+          <div class="nav-item">
+            <a href="#commission">Contact Us</a>
+          </div>
+        </nav>
+
+        <!-- HERO -->
+
+        <section class="hero" id="archive">
+          <!-- MARQUEE -->
+
+          <div class="marquee">
+            <div class="marquee-track">
+              <h1>Long Exposure</h1>
+              <h1>Long Exposure</h1>
+              <h1>Long Exposure</h1>
+              <h1>Long Exposure</h1>
+            </div>
+          </div>
+
+          <!-- BLACK INTRO OVERLAY -->
+
+          <div class="hero-overlay">
+            <div class="counter" aria-label="Image counter">
+              <div class="digit-col"></div>
+              <div class="digit-col"></div>
+            </div>
+          </div>
+
+          <!-- IMAGE REVEAL -->
+
+          <div class="hero-img-wrapper">
+            <div class="hero-img">
+              <img
+                src="/images/img1.webp"
+                alt="Architectural editorial photograph one"
+                fetchpriority="high"
+              />
+            </div>
+
+            <div class="hero-img">
+              <img
+                src="/images/img2.webp"
+                alt="Architectural editorial photograph two"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="hero-img">
+              <img
+                src="/images/img3.webp"
+                alt="Architectural editorial photograph three"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="hero-img">
+              <img
+                src="/images/img4.webp"
+                alt="Architectural editorial photograph four"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="hero-img">
+              <img
+                src="/images/img5.webp"
+                alt="Architectural editorial photograph five"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="hero-img">
+              <img
+                src="/images/img6.webp"
+                alt="Architectural editorial photograph six"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <!-- HERO DESCRIPTION -->
+
+          <div class="hero-copy">
+            <p>
+              A growing archive of people, places and the small moments between
+              them.
+            </p>
+
+            <!-- CALLOUT -->
+
+            <div class="hero-callout">
+              <span
+                class="hero-callout-border hero-callout-border-top"
+                aria-hidden="true"
+              ></span>
+
+              <span
+                class="hero-callout-border hero-callout-border-right"
+                aria-hidden="true"
+              ></span>
+
+              <span
+                class="hero-callout-border hero-callout-border-bottom"
+                aria-hidden="true"
+              ></span>
+
+              <span
+                class="hero-callout-border hero-callout-border-left"
+                aria-hidden="true"
+              ></span>
+
+              <p>Exhibition Opens 14 Nov</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXISTING FOOTER -->
+
+        <footer>
+          <p class="footer-copyright">Lumen &copy; 2026</p>
+
+          <div class="footer-actions">
+            <a href="#selection" class="selection-button">
+              <span>Our Selection</span>
+
+              <span class="selection-grid" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+              </span>
+            </a>
+
+            <button
+              class="footer-menu-button"
+              type="button"
+              aria-label="Open menu"
+            >
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </footer>
+      </main>
+    </div>
+
+    <!-- ==========================================
+         EXISTING REACT COLLECTIONS
+    =========================================== -->
+    <div id="collections-root"></div>
 
     <!-- CUSTOM HOVER CURSOR -->
     <div class="hover-cursor" aria-hidden="true"></div>
 
-    <!-- ==========================================
-         JAVASCRIPT
-    =========================================== -->
-
+    <!-- JAVASCRIPT -->
     <script type="module" src="/script.js"></script>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

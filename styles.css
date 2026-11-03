@@ -1,6 +1,6 @@
-/* =========================================
+/* ==========================================
    ROOT VARIABLES
-========================================= */
+========================================== */
 
 :root {
   --dark: #0f0f0f;
@@ -11,9 +11,9 @@
   --page-padding: 3rem;
 }
 
-/* =========================================
+/* ==========================================
    RESET
-========================================= */
+========================================== */
 
 * {
   margin: 0;
@@ -21,19 +21,14 @@
   box-sizing: border-box;
 }
 
-/* =========================================
-   GLOBAL DOCUMENT SCROLL
-========================================= */
-
 html {
   width: 100%;
-  height: auto;
   min-height: 100%;
 
   overflow-x: clip;
   overflow-y: auto;
 
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scrollbar-gutter: stable;
 }
 
@@ -41,23 +36,18 @@ body {
   position: relative;
 
   width: 100%;
-  height: auto;
   min-height: 100vh;
 
   font-family: "Google Sans Flex", sans-serif;
 
-  background: var(--light);
+  background: #dfe2e8;
   color: var(--dark);
 
-  overflow: visible;
+  overflow-x: clip;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-/* =========================================
-   GLOBAL ELEMENTS
-========================================= */
 
 img {
   display: block;
@@ -81,35 +71,205 @@ button {
   font: inherit;
 }
 
-/* =========================================
-   MAIN PAGE
-========================================= */
+/* ==========================================
+   TRANSITION SCENE
+========================================== */
 
-#main-content {
+.transition-scene {
   position: relative;
 
   width: 100%;
-  min-height: 100svh;
+  height: 100svh;
+
+  overflow: clip;
+  isolation: isolate;
+
+  background: #dfe2e8;
 }
 
-/* =========================================
-   REACT MOUNT
-========================================= */
+/* ==========================================
+   FOUR UNDERNEATH COLLECTION PANELS
+========================================== */
+
+.underneath-grid {
+  position: absolute;
+  top: 6vh;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 70%;
+  padding: 0 3rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  overflow: hidden;
+  clip-path: inset(100% 0 0 0);
+  will-change: clip-path;
+}
+
+/* ==========================================
+   INDIVIDUAL COLLECTION PANEL
+========================================== */
+
+.collection-panel {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  height: 100%;
+
+  overflow: hidden;
+
+  color: #ffffff;
+}
+
+/* ==========================================
+   PANEL TOP SECTION
+========================================== */
+
+.panel-top {
+  position: relative;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+.sea .panel-top {
+  background: #202744;
+}
+
+.evergreen .panel-top {
+  background: #37634f;
+}
+
+.urban .panel-top {
+  background: #281b2b;
+}
+
+.gems .panel-top {
+  background: #19191c;
+}
+
+/* ==========================================
+   PANEL LOGO
+========================================== */
+
+.panel-logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: block;
+  width: 100px;
+  height: 32px;
+  max-width: calc(100% - 2.4rem);
+  object-fit: contain;
+  object-position: left center;
+  /* Convert black logo to white */
+  filter: invert(1);
+  /* Remove the black background visually */
+  mix-blend-mode: screen;
+  z-index: 5;
+}
+
+/* ==========================================
+   PANEL VERTICAL TITLE
+========================================== */
+
+.panel-title {
+  position: absolute;
+
+  right: 1rem;
+  bottom: 1rem;
+
+  writing-mode: vertical-rl;
+
+  transform: rotate(180deg);
+
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
+
+  font-weight: 500;
+
+  letter-spacing: -0.055em;
+
+  line-height: 1;
+}
+
+/* ==========================================
+   PANEL DESCRIPTION
+========================================== */
+
+.panel-top p {
+  position: absolute;
+
+  left: 1rem;
+  bottom: 1rem;
+
+  max-width: 75%;
+
+  font-size: 0.65rem;
+
+  line-height: 1.35;
+
+  font-weight: 400;
+
+  letter-spacing: 0;
+}
+
+/* ==========================================
+   PANEL IMAGE
+========================================== */
+
+.panel-image {
+  width: 100%;
+  height: 29%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.panel-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================
+   EXISTING HOMEPAGE
+========================================== */
+
+#main-content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* ==========================================
+   EXISTING REACT COLLECTION MOUNT
+========================================== */
 
 #collections-root {
   position: relative;
+
   display: block;
 
   width: 100%;
   height: auto;
+
   min-height: 0;
 
   overflow: visible;
 }
 
-/* =========================================
+/* ==========================================
    NAVIGATION
-========================================= */
+========================================== */
 
 .navigation {
   position: fixed;
@@ -118,6 +278,7 @@ button {
   left: 0;
 
   width: 100%;
+
   padding: var(--page-padding);
 
   display: flex;
@@ -150,9 +311,9 @@ button {
   font-weight: 500;
 }
 
-/* =========================================
+/* ==========================================
    CENTRE LOGO
-========================================= */
+========================================== */
 
 .nav-brand {
   justify-content: center;
@@ -165,23 +326,23 @@ button {
 
 .nav-brand a {
   display: flex;
+
   align-items: center;
   justify-content: center;
 }
 
 .nav-logo {
   display: block;
-
   width: 300px;
   height: auto;
-  max-height: 80px;
+  max-height: 50px;
 
   object-fit: contain;
 }
 
-/* =========================================
+/* ==========================================
    HERO SECTION
-========================================= */
+========================================== */
 
 .hero {
   position: relative;
@@ -191,14 +352,15 @@ button {
   height: 100svh;
 
   overflow: hidden;
+
   isolation: isolate;
 
   background: var(--light);
 }
 
-/* =========================================
+/* ==========================================
    INFINITE MARQUEE
-========================================= */
+========================================== */
 
 .marquee {
   position: absolute;
@@ -211,6 +373,7 @@ button {
   transform: translateY(-75%);
 
   overflow: hidden;
+
   pointer-events: none;
 
   z-index: 1;
@@ -218,9 +381,11 @@ button {
 
 .marquee-track {
   display: flex;
+
   align-items: center;
 
   width: max-content;
+
   flex-wrap: nowrap;
 
   will-change: transform;
@@ -234,9 +399,11 @@ button {
   white-space: nowrap;
 
   font-size: clamp(5rem, 15vw, 18rem);
+
   font-weight: 450;
 
   line-height: 0.9;
+
   letter-spacing: -0.085em;
 
   transform: translateY(100%);
@@ -244,12 +411,13 @@ button {
   will-change: transform;
 }
 
-/* =========================================
+/* ==========================================
    BLACK INTRO OVERLAY
-========================================= */
+========================================== */
 
 .hero-overlay {
   position: absolute;
+
   inset: 0;
 
   width: 100%;
@@ -262,12 +430,13 @@ button {
   z-index: 2;
 
   will-change: clip-path;
+
   pointer-events: none;
 }
 
-/* =========================================
+/* ==========================================
    COUNTER
-========================================= */
+========================================== */
 
 .counter {
   position: absolute;
@@ -278,6 +447,7 @@ button {
   transform: translateX(-50%);
 
   display: flex;
+
   align-items: flex-start;
   justify-content: center;
 
@@ -290,6 +460,7 @@ button {
   color: #ffffff;
 
   z-index: 3;
+
   pointer-events: none;
 }
 
@@ -304,6 +475,7 @@ button {
 
 .digit-col span {
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -313,15 +485,17 @@ button {
   flex-shrink: 0;
 
   font-size: 1.5rem;
+
   font-weight: 450;
 
   line-height: 1;
+
   letter-spacing: -0.02em;
 }
 
-/* =========================================
+/* ==========================================
    HERO IMAGE WRAPPER
-========================================= */
+========================================== */
 
 .hero-img-wrapper {
   position: absolute;
@@ -330,6 +504,7 @@ button {
   left: 50%;
 
   width: 20%;
+
   max-width: 250px;
 
   aspect-ratio: 4 / 5;
@@ -343,12 +518,13 @@ button {
   will-change: transform;
 }
 
-/* =========================================
+/* ==========================================
    INDIVIDUAL HERO IMAGES
-========================================= */
+========================================== */
 
 .hero-img {
   position: absolute;
+
   inset: 0;
 
   width: 100%;
@@ -372,9 +548,9 @@ button {
   will-change: transform;
 }
 
-/* =========================================
+/* ==========================================
    HERO COPY
-========================================= */
+========================================== */
 
 .hero-copy {
   position: absolute;
@@ -387,7 +563,9 @@ button {
   width: 35%;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
 
@@ -402,23 +580,26 @@ button {
   width: 100%;
 
   font-size: 1.1rem;
+
   font-weight: 450;
 
   line-height: 1.45;
 }
 
-/* =========================================
+/* ==========================================
    HERO CALLOUT
-========================================= */
+========================================== */
 
 .hero-callout {
   position: relative;
 
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
 
   width: fit-content;
+
   max-width: 100%;
 
   padding: 12px 16px;
@@ -426,9 +607,9 @@ button {
   overflow: hidden;
 }
 
-/* =========================================
+/* ==========================================
    CALLOUT BORDER BASE
-========================================= */
+========================================== */
 
 .hero-callout-border {
   position: absolute;
@@ -438,12 +619,11 @@ button {
   background: var(--dark);
 
   pointer-events: none;
+
   will-change: transform;
 }
 
-/* =========================================
-   TOP BORDER
-========================================= */
+/* TOP BORDER */
 
 .hero-callout-border-top {
   top: 0;
@@ -453,12 +633,11 @@ button {
   height: 1px;
 
   transform: scaleX(0);
+
   transform-origin: left center;
 }
 
-/* =========================================
-   RIGHT BORDER
-========================================= */
+/* RIGHT BORDER */
 
 .hero-callout-border-right {
   top: 0;
@@ -468,12 +647,11 @@ button {
   height: 100%;
 
   transform: scaleY(0);
+
   transform-origin: center top;
 }
 
-/* =========================================
-   BOTTOM BORDER
-========================================= */
+/* BOTTOM BORDER */
 
 .hero-callout-border-bottom {
   right: 0;
@@ -483,12 +661,11 @@ button {
   height: 1px;
 
   transform: scaleX(0);
+
   transform-origin: right center;
 }
 
-/* =========================================
-   LEFT BORDER
-========================================= */
+/* LEFT BORDER */
 
 .hero-callout-border-left {
   top: 0;
@@ -498,33 +675,37 @@ button {
   height: 100%;
 
   transform: scaleY(0);
+
   transform-origin: center bottom;
 }
 
-/* =========================================
+/* ==========================================
    CALLOUT TEXT
-========================================= */
+========================================== */
 
 .hero-callout p {
   width: max-content;
 
   font-size: 1.1rem;
+
   font-weight: 500;
 
   letter-spacing: 0.12em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
 
   transform: translateY(100%);
+
   opacity: 0;
 
   will-change: transform, opacity;
 }
 
-/* =========================================
+/* ==========================================
    SPLIT TEXT
-========================================= */
+========================================== */
 
 .line {
   position: relative;
@@ -534,9 +715,9 @@ button {
   will-change: transform;
 }
 
-/* =========================================
+/* ==========================================
    FOOTER
-========================================= */
+========================================== */
 
 footer {
   position: fixed;
@@ -545,9 +726,11 @@ footer {
   bottom: 0;
 
   width: 100%;
+
   padding: var(--page-padding);
 
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 
@@ -558,23 +741,25 @@ footer {
 
 footer p {
   font-size: 1.1rem;
+
   font-weight: 450;
 }
 
-/* =========================================
+/* ==========================================
    FOOTER COPYRIGHT
-========================================= */
+========================================== */
 
 .footer-copyright {
   overflow: hidden;
 }
 
-/* =========================================
+/* ==========================================
    FOOTER ACTIONS
-========================================= */
+========================================== */
 
 .footer-actions {
   display: flex;
+
   align-items: center;
 
   gap: 5px;
@@ -582,6 +767,7 @@ footer p {
   pointer-events: auto;
 
   opacity: 0;
+
   visibility: hidden;
 
   transform: translateY(18px);
@@ -589,43 +775,36 @@ footer p {
   will-change: transform, opacity;
 }
 
-/* =========================================
+/* ==========================================
    OUR SELECTION BUTTON
-========================================= */
+========================================== */
 
 .selection-button {
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 10px;
-
   width: 143px;
   height: 37px;
-
   padding: 0 10px;
-
   border: 1px solid var(--brand-blue);
   background: transparent;
-
-  color: var(--brand-blue);
-
+  color: black;
   font-size: 0.8rem;
   font-weight: 500;
-
   transition:
     background 0.3s ease,
     color 0.3s ease;
 }
 
 .selection-button:hover {
-  background: var(--brand-blue);
+  background: black;
   color: #ffffff;
 }
 
-/* =========================================
+/* ==========================================
    SELECTION GRID ICON
-========================================= */
+========================================== */
 
 .selection-grid {
   display: grid;
@@ -645,34 +824,27 @@ footer p {
   background: currentColor;
 }
 
-/* =========================================
+/* ==========================================
    MENU BUTTON
-========================================= */
+========================================== */
 
 .footer-menu-button {
   width: 41px;
   height: 37px;
-
   display: flex;
   flex-direction: column;
-
   justify-content: center;
   align-items: flex-start;
-
   gap: 5px;
-
   padding: 0 11px;
-
-  border: 1px solid var(--brand-blue);
-  background: var(--brand-blue);
-
+  border: 1px solid #0000;
+  background: #090909;
   cursor: pointer;
-
   transition: background 0.3s ease;
 }
 
 .footer-menu-button:hover {
-  background: #304580;
+  background: #f26c05;
 }
 
 .footer-menu-button span {
@@ -688,9 +860,9 @@ footer p {
   width: 11px;
 }
 
-/* =========================================
+/* ==========================================
    CUSTOM HOVER CURSOR
-========================================= */
+========================================== */
 
 .hover-cursor {
   position: fixed;
@@ -706,6 +878,7 @@ footer p {
   background: rgba(15, 15, 15, 0.28);
 
   pointer-events: none;
+
   z-index: 9999;
 
   opacity: 0;
@@ -729,9 +902,9 @@ footer p {
   transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* =========================================
+/* ==========================================
    CUSTOM CURSOR TARGETS
-========================================= */
+========================================== */
 
 @media (hover: hover) and (pointer: fine) {
   body.custom-cursor-active .custom-cursor-target {
@@ -744,9 +917,9 @@ footer p {
   }
 }
 
-/* =========================================
+/* ==========================================
    TOUCH DEVICES
-========================================= */
+========================================== */
 
 @media (hover: none), (pointer: coarse) {
   .hover-cursor {
@@ -754,9 +927,9 @@ footer p {
   }
 }
 
-/* =========================================
+/* ==========================================
    TABLET
-========================================= */
+========================================== */
 
 @media (max-width: 768px) {
   :root {
@@ -790,11 +963,50 @@ footer p {
   .counter {
     bottom: 9svh;
   }
+
+  /* FOUR PANELS */
+
+  .underneath-grid {
+    padding: 2rem;
+    gap: 0.65rem;
+  }
+
+  .panel-logo {
+    top: 0.65rem;
+    left: 0.65rem;
+
+    width: 85px;
+    height: 28px;
+
+    object-fit: contain;
+    object-position: left center;
+
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+
+  .panel-title {
+    right: 0.6rem;
+    bottom: 0.65rem;
+
+    font-size: clamp(1rem, 2.8vw, 1.6rem);
+  }
+
+  .panel-top p {
+    left: 0.65rem;
+    bottom: 0.65rem;
+
+    font-size: 0.5rem;
+  }
+
+  .panel-image {
+    height: 23%;
+  }
 }
 
-/* =========================================
+/* ==========================================
    MOBILE
-========================================= */
+========================================== */
 
 @media (max-width: 480px) {
   :root {
@@ -817,6 +1029,7 @@ footer p {
 
   .hero-copy {
     width: 88%;
+
     bottom: 18svh;
 
     gap: 1.1rem;
@@ -824,6 +1037,7 @@ footer p {
 
   .hero-copy > p {
     font-size: 0.95rem;
+
     line-height: 1.4;
   }
 
@@ -833,6 +1047,7 @@ footer p {
 
   .hero-callout p {
     font-size: 0.75rem;
+
     letter-spacing: 0.08em;
   }
 
@@ -884,6 +1099,7 @@ footer p {
     height: 35px;
 
     padding: 0 10px;
+
     gap: 5px;
   }
 
@@ -895,27 +1111,75 @@ footer p {
   .footer-menu-button span:last-child {
     width: 11px;
   }
+
+  /* FOUR COLLECTION PANELS */
+
+  .underneath-grid {
+    padding: 1rem;
+
+    gap: 0.4rem;
+  }
+
+  .panel-logo {
+    top: 0.6rem;
+    left: 0.6rem;
+    width: 75px;
+    height: 25px;
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+
+  .panel-title {
+    right: 0.3rem;
+    bottom: 0.45rem;
+
+    font-size: clamp(0.85rem, 3.2vw, 1.2rem);
+  }
+
+  .panel-top p {
+    left: 0.35rem;
+    bottom: 0.45rem;
+
+    max-width: 78%;
+
+    font-size: 0.4rem;
+
+    line-height: 1.3;
+  }
+
+  .panel-image {
+    height: 22%;
+  }
 }
 
-/* =========================================
-   FINAL DOCUMENT SCROLL SAFEGUARD
-========================================= */
+/* ==========================================
+   REDUCED MOTION
+========================================== */
 
-html,
-body {
-  max-height: none;
-}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-body {
-  overflow-y: visible;
-}
+  .transition-scene {
+    height: auto;
 
-#main-content,
-#collections-root,
-.services-page,
-.services-list {
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  overflow-y: visible;
+    overflow: visible;
+  }
+
+  .underneath-grid {
+    position: relative;
+
+    height: 100svh;
+
+    clip-path: none;
+  }
+
+  #main-content {
+    position: relative;
+
+    inset: auto;
+
+    transform: none !important;
+  }
 }
