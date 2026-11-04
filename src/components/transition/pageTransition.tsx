@@ -1,13 +1,29 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { gsap } from "gsap";
 import "./page-transition.css";
 
 const STORAGE_KEY = "realevate-page-transition";
+
 const ABOUT_PATH = "/about";
+const CONTACT_PATH = "/contact";
+
+const TRANSITION_PATHS = [ABOUT_PATH, CONTACT_PATH];
 
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
+const getTransitionWord = (path: string) => {
+  if (path === ABOUT_PATH) return "About";
+  if (path === CONTACT_PATH) return "Contact";
+  return "About";
+};
+
 function PageTransition() {
+  const currentPath = normalizePath(window.location.pathname);
+
+  const [transitionWord, setTransitionWord] = useState(
+    getTransitionWord(currentPath),
+  );
+
   useLayoutEffect(() => {
     const overlay = document.querySelector<HTMLElement>(".page-transition");
 
@@ -21,9 +37,7 @@ function PageTransition() {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    const currentPath = normalizePath(window.location.pathname);
-
-    const isAboutPage = currentPath === ABOUT_PATH;
+    const isTransitionPage = TRANSITION_PATHS.includes(currentPath);
 
     let timeline: gsap.core.Timeline | null = null;
     let navigating = false;
@@ -37,7 +51,7 @@ function PageTransition() {
       overlay.style.pointerEvents = "none";
     };
 
-    const revealAboutPage = () => {
+    const revealDestinationPage = () => {
       if (reducedMotion) {
         hideOverlay();
         return;
@@ -81,20 +95,20 @@ function PageTransition() {
     hideOverlay();
 
     /*
-     * ABOUT PAGE ENTRANCE
+     * DESTINATION PAGE ENTRANCE
      */
 
-    const shouldReveal = sessionStorage.getItem(STORAGE_KEY) === "about";
+    const storedDestination = sessionStorage.getItem(STORAGE_KEY);
 
-    if (isAboutPage && shouldReveal) {
+    if (isTransitionPage && storedDestination === currentPath) {
       sessionStorage.removeItem(STORAGE_KEY);
-      revealAboutPage();
+      revealDestinationPage();
     } else {
       sessionStorage.removeItem(STORAGE_KEY);
     }
 
     /*
-     * NAVIGATION TO ABOUT
+     * NAVIGATION TO ABOUT OR CONTACT
      */
 
     const handleClick = (event: MouseEvent) => {
@@ -129,20 +143,40 @@ function PageTransition() {
 
       if (destination.origin !== window.location.origin) return;
 
-      if (normalizePath(destination.pathname) !== ABOUT_PATH) return;
+      const destinationPath = normalizePath(destination.pathname);
 
-      if (isAboutPage || navigating) return;
+      if (!TRANSITION_PATHS.includes(destinationPath)) return;
+
+      if (destinationPath === currentPath || navigating) return;
 
       event.preventDefault();
 
       navigating = true;
 
-      sessionStorage.setItem(STORAGE_KEY, "about");
+      /*
+       * SET DESTINATION TYPOGRAPHY
+       */
+
+      setTransitionWord(getTransitionWord(destinationPath));
+
+      /*
+       * SAVE DESTINATION FOR PAGE ENTRANCE
+       */
+
+      sessionStorage.setItem(STORAGE_KEY, destinationPath);
+
+      /*
+       * REDUCED MOTION
+       */
 
       if (reducedMotion) {
         window.location.assign(destination.href);
         return;
       }
+
+      /*
+       * INITIAL OVERLAY POSITION
+       */
 
       overlay.style.pointerEvents = "auto";
 
@@ -156,6 +190,10 @@ function PageTransition() {
       });
 
       timeline?.kill();
+
+      /*
+       * OUTGOING PAGE TRANSITION
+       */
 
       timeline = gsap.timeline({
         onComplete: () => {
@@ -184,25 +222,27 @@ function PageTransition() {
 
     return () => {
       document.removeEventListener("click", handleClick);
+
       timeline?.kill();
+
       gsap.killTweensOf([overlay, track]);
     };
-  }, []);
+  }, [currentPath]);
 
   return (
     <div className="page-transition" aria-hidden="true">
       <div className="page-transition__viewport">
         <div className="page-transition__track">
           <div className="page-transition__word">
-            <span>About</span>
+            <span>{transitionWord}</span>
           </div>
 
           <div className="page-transition__word">
-            <span>About</span>
+            <span>{transitionWord}</span>
           </div>
 
           <div className="page-transition__word">
-            <span>About</span>
+            <span>{transitionWord}</span>
           </div>
         </div>
       </div>
