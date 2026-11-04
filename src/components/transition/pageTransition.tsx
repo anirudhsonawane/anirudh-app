@@ -1,9 +1,9 @@
 import { useLayoutEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { gsap } from "gsap";
 import "./page-transition.css";
 
-const STORAGE_KEY = "realevate-page-transition";
-
+const HOME_PATH = "/";
 const ABOUT_PATH = "/about";
 const CONTACT_PATH = "/contact";
 
@@ -11,17 +11,21 @@ const TRANSITION_PATHS = [ABOUT_PATH, CONTACT_PATH];
 
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
+const isTransitionPage = (path: string) =>
+  TRANSITION_PATHS.includes(normalizePath(path));
+
 const getTransitionWord = (path: string) => {
-  if (path === ABOUT_PATH) return "About";
-  if (path === CONTACT_PATH) return "Contact";
-  return "About";
+  const normalized = normalizePath(path);
+
+  if (normalized === ABOUT_PATH) return "About";
+  if (normalized === CONTACT_PATH) return "Contact";
+
+  return "Explore";
 };
 
 function PageTransition() {
-  const currentPath = normalizePath(window.location.pathname);
-
-  const [transitionWord, setTransitionWord] = useState(
-    getTransitionWord(currentPath),
+  const [transitionWord, setTransitionWord] = useState(() =>
+    getTransitionWord(window.location.pathname),
   );
 
   useLayoutEffect(() => {
@@ -37,78 +41,56 @@ function PageTransition() {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    const isTransitionPage = TRANSITION_PATHS.includes(currentPath);
-
     let timeline: gsap.core.Timeline | null = null;
     let navigating = false;
+
+    /*
+     * INITIAL OVERLAY STATE
+     */
 
     const hideOverlay = () => {
       gsap.set(overlay, {
         autoAlpha: 0,
         clipPath: "inset(100% 0 0 0)",
-      });
-
-      overlay.style.pointerEvents = "none";
-    };
-
-    const revealDestinationPage = () => {
-      if (reducedMotion) {
-        hideOverlay();
-        return;
-      }
-
-      gsap.set(overlay, {
-        autoAlpha: 1,
-        clipPath: "inset(0% 0 0 0)",
         pointerEvents: "none",
       });
 
       gsap.set(track, {
         yPercent: 0,
       });
-
-      timeline = gsap.timeline({
-        onComplete: hideOverlay,
-      });
-
-      timeline
-        .to(track, {
-          yPercent: -33.333,
-          duration: 1.15,
-          ease: "power3.inOut",
-        })
-        .to(
-          overlay,
-          {
-            clipPath: "inset(100% 0 0 0)",
-            duration: 1.05,
-            ease: "power4.inOut",
-          },
-          "-=0.65",
-        );
     };
-
-    /*
-     * INITIAL PAGE STATE
-     */
 
     hideOverlay();
 
     /*
-     * DESTINATION PAGE ENTRANCE
+     * CLIENT-SIDE NAVIGATION
+     * Used only for About and Contact Us transitions.
      */
 
-    const storedDestination = sessionStorage.getItem(STORAGE_KEY);
+    const navigateWithoutReload = (destination: URL) => {
+      window.history.pushState(
+        {},
+        "",
+        destination.pathname + destination.search + destination.hash,
+      );
 
-    if (isTransitionPage && storedDestination === currentPath) {
-      sessionStorage.removeItem(STORAGE_KEY);
-      revealDestinationPage();
-    } else {
-      sessionStorage.removeItem(STORAGE_KEY);
-    }
+      flushSync(() => {
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      });
+    };
 
     /*
-     * NAVIGATION TO ABOUT OR CONTACT
+     * TRANSITION COMPLETION
+     */
+
+    const finishTransition = () => {
+      hideOverlay();
+      timeline = null;
+      navigating = false;
+    };
+
+    /*
+     * NAVIGATION CLICK HANDLER
      */
 
     const handleClick = (event: MouseEvent) => {
@@ -143,78 +125,131 @@ function PageTransition() {
 
       if (destination.origin !== window.location.origin) return;
 
+      const currentPath = normalizePath(window.location.pathname);
+
       const destinationPath = normalizePath(destination.pathname);
 
-      if (!TRANSITION_PATHS.includes(destinationPath)) return;
+      /*
+       * IGNORE SAME-PAGE NAVIGATION
+       */
 
-      if (destinationPath === currentPath || navigating) return;
+      if (destinationPath === currentPath) return;
+
+      /*
+       * IMPORTANT:
+       * HOME MUST USE ITS EXISTING PRELOADER.
+       *
+       * Do not prevent the default browser navigation.
+       * Do not use the custom page transition.
+       * Do not use SPA navigation.
+       *
+       * The normal page load will initialize the
+       * existing homepage preloader.
+       */
+
+      if (destinationPath === HOME_PATH) {
+        return;
+      }
+
+      /*
+       * TRANSITIONS ONLY WHEN ABOUT OR CONTACT
+       * IS THE CURRENT OR DESTINATION PAGE.
+       */
+
+      const shouldTransition =
+        isTransitionPage(currentPath) || isTransitionPage(destinationPath);
+
+      if (!shouldTransition) return;
+
+      if (navigating) {
+        event.preventDefault();
+        return;
+      }
 
       event.preventDefault();
 
       navigating = true;
 
-      /*
-       * SET DESTINATION TYPOGRAPHY
-       */
-
-      setTransitionWord(getTransitionWord(destinationPath));
+      timeline?.kill();
 
       /*
-       * SAVE DESTINATION FOR PAGE ENTRANCE
+       * UPDATE TRANSITION TITLE
        */
 
-      sessionStorage.setItem(STORAGE_KEY, destinationPath);
+      flushSync(() => {
+        setTransitionWord(getTransitionWord(destinationPath));
+      });
 
       /*
        * REDUCED MOTION
        */
 
       if (reducedMotion) {
-        window.location.assign(destination.href);
+        navigateWithoutReload(destination);
+        finishTransition();
         return;
       }
 
       /*
-       * INITIAL OVERLAY POSITION
+       * PREPARE OVERLAY
        */
-
-      overlay.style.pointerEvents = "auto";
 
       gsap.set(overlay, {
         autoAlpha: 1,
         clipPath: "inset(100% 0 0 0)",
+        pointerEvents: "auto",
       });
 
       gsap.set(track, {
         yPercent: 0,
       });
 
-      timeline?.kill();
-
       /*
-       * OUTGOING PAGE TRANSITION
+       * SINGLE CONTINUOUS TIMELINE
        */
 
       timeline = gsap.timeline({
-        onComplete: () => {
-          window.location.assign(destination.href);
-        },
+        onComplete: finishTransition,
       });
 
       timeline
+
+        /*
+         * 1. COVER CURRENT PAGE
+         */
+
         .to(overlay, {
           clipPath: "inset(0% 0 0 0)",
-          duration: 1.05,
+          duration: 0.9,
           ease: "power4.inOut",
         })
+
+        /*
+         * 2. CHANGE PAGE WHILE COVERED
+         */
+
+        .add(() => {
+          navigateWithoutReload(destination);
+        })
+
+        /*
+         * 3. REVEAL DESTINATION PAGE
+         */
+
+        .to(track, {
+          yPercent: -33.333,
+          duration: 1.1,
+          ease: "power3.inOut",
+        })
+
         .to(
-          track,
+          overlay,
           {
-            yPercent: -33.333,
-            duration: 1.15,
-            ease: "power3.inOut",
+            clipPath: "inset(100% 0 0 0)",
+            duration: 1.05,
+            ease: "power4.inOut",
           },
-          "-=0.65",
+          "<",
         );
     };
 
@@ -227,7 +262,7 @@ function PageTransition() {
 
       gsap.killTweensOf([overlay, track]);
     };
-  }, [currentPath]);
+  }, []);
 
   return (
     <div className="page-transition" aria-hidden="true">

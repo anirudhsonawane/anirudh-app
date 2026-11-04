@@ -1,18 +1,37 @@
 import { createRoot } from "react-dom/client";
 import App from "./app";
 
-const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
-const isAboutPage = currentPath === "/about";
-const isContactPage = currentPath === "/contact";
+const updateRouteClasses = () => {
+  const currentPath = normalizePath(window.location.pathname);
 
-if (isAboutPage) {
-  document.documentElement.classList.add("about-route");
-}
+  document.documentElement.classList.toggle(
+    "about-route",
+    currentPath === "/about",
+  );
 
-if (isContactPage) {
-  document.documentElement.classList.add("contact-route");
-}
+  document.documentElement.classList.toggle(
+    "contact-route",
+    currentPath === "/contact",
+  );
+};
+
+/*
+ * INITIAL ROUTE CLASSES
+ */
+
+updateRouteClasses();
+
+/*
+ * UPDATE CLASSES ON SPA NAVIGATION
+ */
+
+window.addEventListener("popstate", updateRouteClasses);
+
+/*
+ * REACT MOUNT
+ */
 
 const rootElement = document.getElementById("app-root");
 
