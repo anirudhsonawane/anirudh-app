@@ -1,0 +1,172 @@
+/* =====================================================
+   REALE​VATE — PAGE TRANSITION
+   Typography-led vertical reveal
+===================================================== */
+
+.page-transition,
+.page-transition * {
+  box-sizing: border-box;
+}
+
+.page-transition {
+  position: fixed;
+  inset: 0;
+
+  z-index: 99999;
+
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  visibility: hidden;
+  opacity: 0;
+
+  pointer-events: none;
+
+  isolation: isolate;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  will-change: clip-path, opacity;
+}
+
+/* =====================================================
+   VIEWPORT
+===================================================== */
+
+.page-transition__viewport {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+/* =====================================================
+   VERTICAL MOVING TRACK
+===================================================== */
+
+.page-transition__track {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 300vh;
+  height: 300svh;
+
+  margin: 0;
+  padding: 0;
+  gap: 0;
+
+  transform: translate3d(0, 0, 0);
+
+  will-change: transform;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* =====================================================
+   INDIVIDUAL TYPOGRAPHY PANELS
+===================================================== */
+
+.page-transition__word {
+  position: relative;
+
+  display: flex;
+  flex: 0 0 100vh;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+}
+
+.page-transition__word span {
+  display: block;
+
+  width: max-content;
+
+  color: #1c2858;
+
+  font-family: "Google Sans Flex", sans-serif;
+
+  font-size: clamp(155px, 22vw, 330px);
+
+  font-weight: 450;
+
+  letter-spacing: -0.075em;
+
+  line-height: 0.9;
+
+  white-space: nowrap;
+
+  transform: rotate(-90deg);
+
+  transform-origin: center center;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  user-select: none;
+}
+
+/* =====================================================
+   LARGE DESKTOP
+===================================================== */
+
+@media (min-width: 1440px) {
+  .page-transition__word span {
+    font-size: clamp(280px, 22vw, 390px);
+  }
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1024px) {
+  .page-transition__word span {
+    font-size: clamp(150px, 27vw, 260px);
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+  .page-transition__word span {
+    font-size: clamp(115px, 32vw, 190px);
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  .page-transition__track,
+  .page-transition__word span {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,19 +1,31 @@
 import About from "./components/about/about";
 import ContactUS from "./components/contact-us/contactUS";
+import PageTransition from "./components/transition/pageTransition";
 
 function App() {
   const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
 
+  let page = null;
+
   switch (currentPath) {
     case "/about":
-      return <About />;
+      page = <About />;
+      break;
 
     case "/contact":
-      return <ContactUS />;
+      page = <ContactUS />;
+      break;
 
     default:
-      return null;
+      page = null;
   }
+
+  return (
+    <>
+      {page}
+      <PageTransition />
+    </>
+  );
 }
 
 export default App;
