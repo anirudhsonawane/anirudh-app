@@ -1,6 +1,59 @@
+import { useEffect } from "react";
 import "./aboutPageTransition.css";
 
 const About = () => {
+  useEffect(() => {
+    let cancelled = false;
+
+    const initializeAboutMarquee = async () => {
+      /*
+       * RESET MARQUEE STATE
+       *
+       * Keep the animation paused until the correct
+       * Google Sans Flex font has finished loading.
+       */
+
+      document.documentElement.classList.remove("about-font-ready");
+
+      try {
+        /*
+         * LOAD THE EXACT MARQUEE FONT WEIGHT
+         */
+
+        if (document.fonts && document.fonts.load) {
+          await document.fonts.load('650 12vw "Google Sans Flex"', "About Us");
+
+          await document.fonts.ready;
+        }
+      } catch (error) {
+        console.warn("About marquee font loading failed:", error);
+      }
+
+      /*
+       * START THE MARQUEE
+       *
+       * Only activate if the About component
+       * is still mounted.
+       */
+
+      if (!cancelled) {
+        document.documentElement.classList.add("about-font-ready");
+      }
+    };
+
+    initializeAboutMarquee();
+
+    /*
+     * CLEANUP
+     */
+
+    return () => {
+      cancelled = true;
+
+      document.documentElement.classList.remove("about-font-ready");
+    };
+  }, []);
+
   return (
     <main className="about-page">
       <section className="about-hero" id="about">
@@ -17,17 +70,12 @@ const About = () => {
 
         {/* =====================================
             NAVIGATION
-            SAME STRUCTURE AS HOMEPAGE
         ===================================== */}
 
         <nav className="navigation about-navigation">
-          {/* LEFT NAVIGATION */}
-
           <div className="nav-item nav-left">
             <a href="#about">About</a>
           </div>
-
-          {/* CENTER BRAND LOGO */}
 
           <div className="nav-item nav-brand">
             <a href="/" aria-label="Realevate Home">
@@ -38,8 +86,6 @@ const About = () => {
               />
             </a>
           </div>
-
-          {/* RIGHT NAVIGATION */}
 
           <div className="nav-item nav-right">
             <a href="/contact">Contact Us</a>
@@ -61,8 +107,7 @@ const About = () => {
               <h1>About Us</h1>
             </div>
 
-            {/* DUPLICATE GROUP
-                REQUIRED FOR SEAMLESS LOOP */}
+            {/* DUPLICATE GROUP */}
 
             <div className="about-marquee-group" aria-hidden="true">
               <h1>About Us</h1>
@@ -87,8 +132,6 @@ const About = () => {
           {/* ACTION BUTTONS */}
 
           <div className="about-actions">
-            {/* OUR SELECTION */}
-
             <a href="/#collections-root" className="about-selection">
               <span>Our Selection</span>
 
@@ -99,8 +142,6 @@ const About = () => {
                 <i />
               </span>
             </a>
-
-            {/* MENU BUTTON */}
 
             <button className="about-menu" type="button" aria-label="Open menu">
               <span />

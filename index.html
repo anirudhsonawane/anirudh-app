@@ -40,28 +40,6 @@
       })();
     </script>
 
-    <!-- ABOUT FONT INITIALIZATION -->
-    <script>
-      (() => {
-        const route = window.location.pathname.replace(/\/+$/, "") || "/";
-
-        if (route !== "/about") return;
-
-        const markFontReady = () => {
-          document.documentElement.classList.add("about-font-ready");
-        };
-
-        if (document.fonts && document.fonts.load) {
-          document.fonts
-            .load('650 12vw "Google Sans Flex"', "About Us")
-            .catch(() => {})
-            .finally(markFontReady);
-        } else {
-          markFontReady();
-        }
-      })();
-    </script>
-
     <!-- GLOBAL STYLES -->
     <link rel="stylesheet" href="/styles.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

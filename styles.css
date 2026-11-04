@@ -168,9 +168,7 @@ button {
   max-width: calc(100% - 2.4rem);
   object-fit: contain;
   object-position: left center;
-  /* Convert black logo to white */
   filter: invert(1);
-  /* Remove the black background visually */
   mix-blend-mode: screen;
   z-index: 5;
 }
@@ -780,26 +778,76 @@ footer p {
 ========================================== */
 
 .selection-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 10px;
   width: 143px;
   height: 37px;
   padding: 0 10px;
+
   border: 1px solid var(--brand-blue);
   background: transparent;
-  color: black;
+
+  color: #000000;
   font-size: 0.8rem;
   font-weight: 500;
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: color 0.35s ease;
 }
 
-.selection-button:hover {
-  background: black;
+/* Animated background fill */
+
+.selection-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background: #090909;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+
+  pointer-events: none;
+}
+
+/* Keep text and icon above background */
+
+.selection-button > span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Background slides from left to right */
+
+.selection-button:hover::before,
+.selection-button:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* Text and icon turn white */
+
+.selection-button:hover,
+.selection-button:focus-visible {
   color: #ffffff;
+}
+
+/* Keyboard accessibility */
+
+.selection-button:focus-visible {
+  outline: 2px solid #090909;
+  outline-offset: 4px;
 }
 
 /* ==========================================
@@ -813,6 +861,8 @@ footer p {
   grid-template-rows: repeat(2, 5px);
 
   gap: 3px;
+
+  color: currentColor;
 }
 
 .selection-grid i {
@@ -822,6 +872,8 @@ footer p {
   height: 5px;
 
   background: currentColor;
+
+  transition: background-color 0.35s ease;
 }
 
 /* ==========================================
