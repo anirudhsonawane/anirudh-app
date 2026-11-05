@@ -1,0 +1,557 @@
+/* ==========================================
+   THE APERTURE — BY THE SEA
+========================================== */
+
+.aperture-p1 {
+  position: fixed;
+  inset: 0;
+
+  /* Must remain below the existing page transition. */
+  z-index: 99998;
+
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  background: transparent;
+  color: #fff;
+
+  font-family: "Google Sans Flex", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   APERTURE BACKGROUND
+========================================== */
+
+.aperture-p1__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background: #202744;
+
+  clip-path: circle(0px at 50% 50%);
+
+  will-change: clip-path;
+}
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.aperture-p1__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 20;
+
+  width: 100%;
+  padding: 2.5rem 3.5rem;
+}
+
+.aperture-p1__navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  align-items: center;
+
+  width: 100%;
+}
+
+.aperture-p1__nav {
+  display: flex;
+  align-items: center;
+
+  opacity: 0;
+
+  will-change: transform, opacity;
+}
+
+.aperture-p1__nav-left {
+  justify-content: flex-start;
+}
+
+.aperture-p1__nav-center {
+  justify-content: center;
+}
+
+.aperture-p1__nav-right {
+  justify-content: flex-end;
+}
+
+.aperture-p1__nav a {
+  color: #fff;
+
+  font-size: 0.78rem;
+  font-weight: 400;
+
+  text-decoration: none;
+
+  transition: opacity 0.3s ease;
+}
+
+.aperture-p1__nav a:hover {
+  opacity: 0.55;
+}
+
+.aperture-p1__nav-center img {
+  display: block;
+
+  width: 145px;
+  height: 35px;
+
+  object-fit: contain;
+
+  filter: brightness(0) invert(1);
+}
+
+/* ==========================================
+   CONTENT LAYOUT
+========================================== */
+
+.aperture-p1__content {
+  position: absolute;
+  inset: 0;
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+.aperture-p1__copy {
+  position: absolute;
+
+  left: 8%;
+  top: 50%;
+
+  width: 45%;
+
+  transform: translateY(-42%);
+
+  pointer-events: auto;
+}
+
+/* ==========================================
+   EYEBROW
+========================================== */
+
+.aperture-p1__eyebrow {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 2.4rem;
+
+  opacity: 0;
+}
+
+.aperture-p1__eyebrow > span {
+  display: block;
+
+  width: 23px;
+  height: 1px;
+
+  flex-shrink: 0;
+
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.aperture-p1__eyebrow p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 0.55rem;
+  font-weight: 400;
+
+  letter-spacing: 0.17em;
+}
+
+/* ==========================================
+   MAIN TYPOGRAPHY
+========================================== */
+
+.aperture-p1__title {
+  position: relative;
+
+  width: max-content;
+  max-width: 100%;
+}
+
+.aperture-p1__title-mask {
+  overflow: hidden;
+}
+
+.aperture-p1__title-line {
+  color: #fff;
+
+  font-size: clamp(4.5rem, 9.5vw, 10rem);
+
+  font-weight: 450;
+
+  line-height: 0.82;
+
+  letter-spacing: -0.095em;
+
+  white-space: nowrap;
+
+  will-change: transform;
+}
+
+.aperture-p1__title-line span {
+  color: #9eaccb;
+}
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.aperture-p1__description {
+  margin-top: 2.5rem;
+
+  opacity: 0;
+}
+
+.aperture-p1__description p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 0.83rem;
+  font-weight: 400;
+
+  line-height: 1.8;
+
+  letter-spacing: 0.005em;
+}
+
+/* ==========================================
+   EXPLORE COLLECTION
+========================================== */
+
+.aperture-p1__back {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 25px;
+
+  margin-top: 2rem;
+  padding: 0 0 10px;
+
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+
+  background: transparent;
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 0.58rem;
+  font-weight: 450;
+
+  letter-spacing: 0.12em;
+
+  cursor: pointer;
+
+  transition:
+    gap 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.aperture-p1__back:hover {
+  gap: 38px;
+  border-color: #fff;
+}
+
+.aperture-p1__back-arrow {
+  font-size: 1rem;
+}
+
+/* ==========================================
+   PROPERTY IMAGE
+========================================== */
+
+.aperture-p1__image {
+  position: fixed;
+
+  z-index: 5;
+
+  overflow: hidden;
+
+  background: #192039;
+
+  will-change: top, left, width, height;
+}
+
+.aperture-p1__image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  transition: transform 1s ease;
+}
+
+.aperture-p1__image:hover img {
+  transform: scale(1.035);
+}
+
+/* ==========================================
+   IMAGE CAPTION
+========================================== */
+
+.aperture-p1__image-caption {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding: 13px 15px;
+
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+
+  color: #fff;
+
+  font-size: 0.48rem;
+  letter-spacing: 0.1em;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.aperture-p1__footer {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding: 1.8rem 3.5rem;
+
+  pointer-events: auto;
+}
+
+.aperture-p1__meta {
+  display: flex;
+  align-items: center;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 0.53rem;
+  font-weight: 400;
+
+  letter-spacing: 0.12em;
+
+  opacity: 0;
+}
+
+.aperture-p1__footer-right {
+  gap: 35px;
+}
+
+.aperture-p1__footer-right button {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 0.53rem;
+
+  letter-spacing: 0.1em;
+
+  cursor: pointer;
+
+  transition: opacity 0.3s ease;
+}
+
+.aperture-p1__footer-right button:hover {
+  opacity: 0.55;
+}
+
+.aperture-p1__footer-right button span {
+  font-size: 0.9rem;
+}
+
+/* ==========================================
+   LAPTOP
+========================================== */
+
+@media (max-width: 1100px) {
+  .aperture-p1__copy {
+    left: 6%;
+    width: 47%;
+  }
+
+  .aperture-p1__title-line {
+    font-size: clamp(4rem, 9vw, 7rem);
+  }
+
+  .aperture-p1__header {
+    padding: 2rem 2.5rem;
+  }
+
+  .aperture-p1__footer {
+    padding: 1.5rem 2.5rem;
+  }
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 768px) {
+  .aperture-p1__header {
+    padding: 1.8rem;
+  }
+
+  .aperture-p1__nav-center img {
+    width: 115px;
+  }
+
+  .aperture-p1__copy {
+    left: 7%;
+    top: 72%;
+
+    width: 86%;
+
+    transform: translateY(-50%);
+  }
+
+  .aperture-p1__title-line {
+    font-size: clamp(4rem, 13vw, 7rem);
+  }
+
+  .aperture-p1__eyebrow {
+    margin-bottom: 1.4rem;
+  }
+
+  .aperture-p1__description {
+    margin-top: 1.5rem;
+  }
+
+  .aperture-p1__footer {
+    padding: 1.2rem 1.8rem;
+  }
+
+  .aperture-p1__footer-right {
+    gap: 15px;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+  .aperture-p1__header {
+    padding: 1.4rem 1.2rem;
+  }
+
+  .aperture-p1__nav a {
+    font-size: 0.62rem;
+  }
+
+  .aperture-p1__nav-center img {
+    width: 85px;
+    height: 26px;
+  }
+
+  .aperture-p1__copy {
+    left: 7%;
+    top: 70%;
+
+    width: 88%;
+  }
+
+  .aperture-p1__eyebrow {
+    gap: 8px;
+    margin-bottom: 1.2rem;
+  }
+
+  .aperture-p1__eyebrow p {
+    font-size: 0.44rem;
+    letter-spacing: 0.12em;
+  }
+
+  .aperture-p1__title-line {
+    font-size: clamp(3.6rem, 15vw, 5.5rem);
+  }
+
+  .aperture-p1__description {
+    margin-top: 1.3rem;
+  }
+
+  .aperture-p1__description p {
+    font-size: 0.68rem;
+  }
+
+  .aperture-p1__back {
+    margin-top: 1.2rem;
+    font-size: 0.5rem;
+  }
+
+  .aperture-p1__footer {
+    padding: 1rem 1.2rem;
+  }
+
+  .aperture-p1__meta {
+    font-size: 0.42rem;
+  }
+
+  .aperture-p1__footer-right {
+    gap: 0;
+  }
+
+  .aperture-p1__footer-right > span {
+    display: none;
+  }
+
+  .aperture-p1__footer-right button {
+    font-size: 0.42rem;
+  }
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .aperture-p1 *,
+  .aperture-p1 *::before,
+  .aperture-p1 *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
