@@ -1,9 +1,9 @@
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  useCallback,
 } from "react";
 import { gsap } from "gsap";
 import "./collectionP1page.css";
@@ -35,7 +35,7 @@ function CollectionP1() {
   const marqueeRef = useRef<gsap.core.Tween | null>(null);
 
   // --------------------------------------------------
-  // OPEN THE BY THE SEA COLLECTION
+  // OPEN COLLECTION
   // --------------------------------------------------
 
   useEffect(() => {
@@ -139,7 +139,12 @@ function CollectionP1() {
     ).matches;
 
     const context = gsap.context(() => {
-      // The image starts at the exact position of the clicked card.
+      gsap.set(root, {
+        visibility: "visible",
+        pointerEvents: "auto",
+      });
+
+      // Image starts at the clicked card.
 
       gsap.set(image, {
         position: "fixed",
@@ -151,7 +156,7 @@ function CollectionP1() {
         borderRadius: 0,
       });
 
-      // The aperture starts at the centre of the clicked image.
+      // Aperture starts at the clicked image centre.
 
       gsap.set(aperture, {
         clipPath: `circle(0px at ${origin.centerX}px ${origin.centerY}px)`,
@@ -189,7 +194,7 @@ function CollectionP1() {
         },
       });
 
-      // 1. Expand the aperture from the clicked card.
+      // 1. Expand the aperture.
 
       timeline.to(aperture, {
         clipPath: `circle(${apertureSize}px at ${origin.centerX}px ${origin.centerY}px)`,
@@ -197,7 +202,7 @@ function CollectionP1() {
         ease: "power4.inOut",
       });
 
-      // 2. Move the clicked image into its editorial position.
+      // 2. Move the image into its editorial position.
 
       timeline.to(
         image,
@@ -212,7 +217,7 @@ function CollectionP1() {
         0.12,
       );
 
-      // 3. Reveal navigation.
+      // 3. Navigation reveal.
 
       timeline.to(
         ".aperture-p1__nav",
@@ -225,7 +230,7 @@ function CollectionP1() {
         0.85,
       );
 
-      // 4. Reveal collection label.
+      // 4. Eyebrow reveal.
 
       timeline.to(
         ".aperture-p1__eyebrow",
@@ -237,7 +242,7 @@ function CollectionP1() {
         1.1,
       );
 
-      // 5. Reveal title.
+      // 5. Title reveal.
 
       timeline.to(
         ".aperture-p1__title-line",
@@ -250,7 +255,7 @@ function CollectionP1() {
         1.15,
       );
 
-      // 6. Reveal description.
+      // 6. Description reveal.
 
       timeline.to(
         ".aperture-p1__description",
@@ -262,7 +267,7 @@ function CollectionP1() {
         1.55,
       );
 
-      // 7. Reveal footer information.
+      // 7. Footer reveal.
 
       timeline.to(
         ".aperture-p1__meta",
@@ -274,8 +279,6 @@ function CollectionP1() {
         },
         1.75,
       );
-
-      // Start the slow title movement after the entrance animation.
 
       if (!reducedMotion) {
         timeline.eventCallback("onComplete", () => {
@@ -303,20 +306,14 @@ function CollectionP1() {
   }, [collection]);
 
   // --------------------------------------------------
-  // ROUTE CHANGE HANDOFF
-  //
-  // PageTransition covers the current screen first.
-  // It then changes the URL and dispatches popstate.
-  // Only at that point do we remove this collection.
+  // ROUTE NAVIGATION HANDOFF
   // --------------------------------------------------
 
   useEffect(() => {
     const handleRouteChange = () => {
-      const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      const path = window.location.pathname.replace(/\/+$/, "") || "/";
 
-      if (currentPath !== "/about" && currentPath !== "/contact") {
-        return;
-      }
+      if (path !== "/about" && path !== "/contact") return;
 
       marqueeRef.current?.kill();
       openingTimelineRef.current?.kill();
@@ -336,7 +333,7 @@ function CollectionP1() {
   }, []);
 
   // --------------------------------------------------
-  // RETURN TO COLLECTIONS
+  // SMOOTH RETURN TO COLLECTION GRID
   // --------------------------------------------------
 
   const closeCollection = useCallback(() => {
@@ -359,51 +356,150 @@ function CollectionP1() {
     const aperture = apertureRef.current;
     const image = imageRef.current;
 
-    const { origin } = collection;
+    // Use the current card position if available.
+    // This keeps the image aligned with the visible grid.
+
+    const originalCard = document.querySelector<HTMLElement>(
+      ".collection-panel.sea",
+    );
+
+    const originalImage =
+      originalCard?.querySelector<HTMLImageElement>(".panel-image img");
+
+    const liveRect = originalImage?.getBoundingClientRect();
+
+    const origin =
+      liveRect && liveRect.width && liveRect.height
+        ? {
+            top: liveRect.top,
+            left: liveRect.left,
+            width: liveRect.width,
+            height: liveRect.height,
+            centerX: liveRect.left + liveRect.width / 2,
+            centerY: liveRect.top + liveRect.height / 2,
+          }
+        : collection.origin;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    const duration = reducedMotion ? 0 : 0.95;
+
+    // Prevent another interaction while the reverse animation runs.
+
+    gsap.set(root, {
+      pointerEvents: "none",
+    });
+
     const timeline = gsap.timeline({
+      defaults: {
+        ease: "power3.inOut",
+      },
       onComplete: () => {
         openRef.current = false;
         closingRef.current = false;
+
         setCollection(null);
       },
     });
 
     closingTimelineRef.current = timeline;
 
-    timeline
-      .to(
-        image,
-        {
-          top: origin.top,
-          left: origin.left,
-          width: origin.width,
-          height: origin.height,
-          duration: reducedMotion ? 0 : 0.85,
-          ease: "power3.inOut",
-        },
-        0,
-      )
-      .to(
-        aperture,
-        {
-          clipPath: `circle(0px at ${origin.centerX}px ${origin.centerY}px)`,
-          duration: reducedMotion ? 0 : 1,
-          ease: "power4.inOut",
-        },
-        0.15,
-      )
-      .set(
-        root,
-        {
-          visibility: "hidden",
-        },
-        ">",
-      );
+    // IMAGE: travel back to the exact collection card.
+
+    timeline.to(
+      image,
+      {
+        top: origin.top,
+        left: origin.left,
+        width: origin.width,
+        height: origin.height,
+        duration,
+        ease: "power4.inOut",
+      },
+      0,
+    );
+
+    // APERTURE: contract around the original card position.
+
+    timeline.to(
+      aperture,
+      {
+        clipPath: `circle(0px at ${origin.centerX}px ${origin.centerY}px)`,
+        duration,
+        ease: "power4.inOut",
+      },
+      0,
+    );
+
+    // NAVIGATION: fade and lift away.
+
+    timeline.to(
+      ".aperture-p1__nav",
+      {
+        y: -12,
+        opacity: 0,
+        duration: reducedMotion ? 0 : 0.35,
+        stagger: 0.035,
+        ease: "power2.in",
+      },
+      0,
+    );
+
+    // COLLECTION LABEL.
+
+    timeline.to(
+      ".aperture-p1__eyebrow",
+      {
+        y: -12,
+        opacity: 0,
+        duration: reducedMotion ? 0 : 0.3,
+        ease: "power2.in",
+      },
+      0,
+    );
+
+    // TITLE: move down while fading out.
+
+    timeline.to(
+      ".aperture-p1__title-line",
+      {
+        yPercent: 35,
+        opacity: 0,
+        duration: reducedMotion ? 0 : 0.42,
+        stagger: 0.035,
+        ease: "power2.in",
+      },
+      0,
+    );
+
+    // DESCRIPTION AND BUTTON.
+
+    timeline.to(
+      ".aperture-p1__description",
+      {
+        y: 18,
+        opacity: 0,
+        duration: reducedMotion ? 0 : 0.32,
+        ease: "power2.in",
+      },
+      0,
+    );
+
+    // FOOTER.
+
+    timeline.to(
+      ".aperture-p1__meta",
+      {
+        y: 12,
+        opacity: 0,
+        duration: reducedMotion ? 0 : 0.3,
+        stagger: 0.025,
+        ease: "power2.in",
+      },
+      0,
+    );
   }, [collection]);
 
   // --------------------------------------------------
