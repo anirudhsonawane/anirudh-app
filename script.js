@@ -29,6 +29,14 @@ if (currentPath !== "/") {
     let transitionRunning = false;
 
     // ==========================================
+    // COLLECTION PAGE PROTECTION
+    // ==========================================
+
+    const isCollectionPageActive = () => {
+      return Boolean(document.querySelector(".aperture-p1, .collection-page"));
+    };
+
+    // ==========================================
     // SPLIT TEXT
     // ==========================================
 
@@ -67,8 +75,6 @@ if (currentPath !== "/") {
         .querySelector("span")
         .getBoundingClientRect().height;
 
-      // COUNTER ANIMATION
-
       const animateCounterTo = (value) => {
         const tens = Math.floor(value / 10);
         const ones = value % 10;
@@ -87,8 +93,6 @@ if (currentPath !== "/") {
           overwrite: true,
         });
       };
-
-      // IMAGE COUNTER TIMING
 
       gsap.delayedCall(0.25, () => animateCounterTo(0));
       gsap.delayedCall(1, () => animateCounterTo(27));
@@ -462,6 +466,14 @@ if (currentPath !== "/") {
         }
 
         function handleWheel(event) {
+          // IMPORTANT:
+          // Do not allow homepage scroll navigation to run
+          // while any collection page is currently open.
+
+          if (isCollectionPageActive()) {
+            return;
+          }
+
           const atPageTop = window.scrollY <= 2;
 
           if (!atPageTop) {
@@ -536,6 +548,14 @@ if (currentPath !== "/") {
         }
 
         function handleTouchMove(event) {
+          // IMPORTANT:
+          // Ignore homepage touch navigation while a collection
+          // page is open. This protects all four collections.
+
+          if (isCollectionPageActive()) {
+            return;
+          }
+
           const atPageTop = window.scrollY <= 2;
 
           if (!atPageTop) {
@@ -639,8 +659,6 @@ if (currentPath !== "/") {
   let homepageInitialized = false;
 
   const startHomepage = () => {
-    // Final route protection
-
     const route = window.location.pathname.replace(/\/+$/, "") || "/";
 
     if (route !== "/") return;
