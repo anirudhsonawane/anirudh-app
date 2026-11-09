@@ -562,10 +562,7 @@ function CollectionP1() {
 
       <main className="aperture-p1__content">
         <div className="aperture-p1__copy">
-          <div className="aperture-p1__eyebrow">
-            <span />
-            <p>COLLECTION NO. 01 — MEDITERRANEAN</p>
-          </div>
+          <div className="aperture-p1__eyebrow"></div>
 
           <div className="aperture-p1__title">
             <div className="aperture-p1__title-mask">
@@ -585,15 +582,6 @@ function CollectionP1() {
               <br />
               of the coast and the art of living well.
             </p>
-
-            <button
-              type="button"
-              onClick={closeCollection}
-              className="aperture-p1__back"
-            >
-              <span>EXPLORE COLLECTION</span>
-              <span className="aperture-p1__back-arrow">↗</span>
-            </button>
           </div>
         </div>
 
