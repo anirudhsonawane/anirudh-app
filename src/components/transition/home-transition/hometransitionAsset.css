@@ -1,0 +1,109 @@
+/* ==========================================
+   HOME PAGE — COLOUR STRIP TRANSITION
+========================================== */
+
+.home-transition,
+.home-transition * {
+  box-sizing: border-box;
+}
+
+.home-transition {
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+
+  overflow: hidden;
+
+  z-index: 200000;
+
+  display: flex;
+
+  visibility: hidden;
+  opacity: 0;
+
+  pointer-events: none;
+
+  isolation: isolate;
+
+  background: transparent;
+
+  contain: layout paint;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   INDIVIDUAL COLOUR STRIPS
+========================================== */
+
+.home-transition__strip {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 25%;
+  height: 100%;
+
+  flex: 0 0 25%;
+
+  transform: translate3d(110%, 0, 0);
+
+  will-change: transform;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ==========================================
+   STRIP 01 — MUTED GOLD
+========================================== */
+
+.home-transition__strip--gold {
+  left: 0%;
+
+  background: #b7a64a;
+}
+
+/* ==========================================
+   STRIP 02 — DEEP OLIVE
+========================================== */
+
+.home-transition__strip--olive {
+  left: 25%;
+
+  background: #494016;
+}
+
+/* ==========================================
+   STRIP 03 — ANTIQUE GOLD
+========================================== */
+
+.home-transition__strip--antique {
+  left: 50%;
+
+  background: #b5a449;
+}
+
+/* ==========================================
+   STRIP 04 — BRIGHT YELLOW
+========================================== */
+
+.home-transition__strip--yellow {
+  left: 75%;
+
+  background: #ffda18;
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .home-transition {
+    transition: none !important;
+  }
+}

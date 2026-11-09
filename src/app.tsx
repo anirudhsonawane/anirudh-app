@@ -4,6 +4,7 @@ import About from "./components/about/about";
 import ContactUS from "./components/contact-us/contactUS";
 
 import PageTransition from "./components/transition/pageTransition";
+import HomeTransition from "./components/transition/home-transition/homeTransition";
 
 import CollectionP1 from "./components/collection/collectionP1";
 import CollectionP2 from "./components/collection/collectionP2";
@@ -49,11 +50,12 @@ function App() {
       {page}
 
       {/* EXISTING PAGE TRANSITION */}
-
       <PageTransition />
 
-      {/* COLLECTION PAGES */}
+      {/* HOMEPAGE RETURN TRANSITION */}
+      <HomeTransition />
 
+      {/* COLLECTION PAGES */}
       <CollectionP1 />
       <CollectionP2 />
       <CollectionP3 />

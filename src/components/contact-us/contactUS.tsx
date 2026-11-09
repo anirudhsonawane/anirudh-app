@@ -65,13 +65,13 @@ function ContactUS() {
           <div className="contact-details">
             <div className="contact-detail">
               <h3>Office</h3>
-              <a href="mailto:info@realevate.agency">Info@realevate.agency</a>
+              <a href="mailto:info@ayushpharmae.com">info@ayushpharmae.com</a>
             </div>
 
             <div className="contact-detail">
               <h3>Whatsapp</h3>
               <a
-                href="https://wa.me/972546020690"
+                href="https://wa.me/9595961116"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -81,7 +81,7 @@ function ContactUS() {
 
             <div className="contact-detail">
               <h3>Phone</h3>
-              <a href="tel:+972546020690">(+972) 54 60 20 690</a>
+              <a href="tel:+919595961116">(+91) 9595961116</a>
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@ function ContactUS() {
               }`}
               onClick={() => setActiveTab("investors")}
             >
-              Investors
+              Enquiry
             </button>
 
             <button
@@ -115,7 +115,7 @@ function ContactUS() {
               }`}
               onClick={() => setActiveTab("partnership")}
             >
-              Partnership
+              Reg. Office
             </button>
           </div>
 
