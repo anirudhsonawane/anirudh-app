@@ -10,17 +10,15 @@ const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
 function HomeTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const blackRef = useRef<HTMLDivElement>(null);
+  const whiteRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const overlay = overlayRef.current;
+    const black = blackRef.current;
+    const white = whiteRef.current;
 
-    if (!overlay) return;
-
-    const strips = Array.from(
-      overlay.querySelectorAll<HTMLElement>(".home-transition__strip"),
-    );
-
-    if (!strips.length) return;
+    if (!overlay || !black || !white) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -29,24 +27,21 @@ function HomeTransition() {
     let timeline: gsap.core.Timeline | null = null;
     let navigating = false;
 
-    const hideOverlay = () => {
+    const reset = () => {
       gsap.set(overlay, {
         autoAlpha: 0,
         pointerEvents: "none",
       });
 
-      gsap.set(strips, {
-        xPercent: 110,
+      gsap.set([black, white], {
+        xPercent: 100,
       });
+
+      timeline = null;
+      navigating = false;
     };
 
-    hideOverlay();
-
-    /*
-    ==========================================
-    CLIENT-SIDE HOMEPAGE NAVIGATION
-    ==========================================
-    */
+    reset();
 
     const navigateHome = (destination: URL) => {
       window.history.pushState(
@@ -59,25 +54,6 @@ function HomeTransition() {
         window.dispatchEvent(new PopStateEvent("popstate"));
       });
     };
-
-    /*
-    ==========================================
-    TRANSITION CLEANUP
-    ==========================================
-    */
-
-    const finishTransition = () => {
-      hideOverlay();
-
-      timeline = null;
-      navigating = false;
-    };
-
-    /*
-    ==========================================
-    NAVIGATION CLICK HANDLER
-    ==========================================
-    */
 
     const handleClick = (event: MouseEvent) => {
       if (
@@ -117,11 +93,7 @@ function HomeTransition() {
 
       const destinationPath = normalizePath(destination.pathname);
 
-      /*
-      Only animate navigation from an internal
-      page back to the homepage.
-      */
-
+      // Only internal page -> homepage.
       if (currentPath === HOME_PATH || destinationPath !== HOME_PATH) {
         return;
       }
@@ -132,108 +104,64 @@ function HomeTransition() {
       }
 
       event.preventDefault();
-
       navigating = true;
 
       timeline?.kill();
 
-      /*
-      ==========================================
-      REDUCED MOTION
-      ==========================================
-      */
-
       if (reducedMotion) {
         navigateHome(destination);
-        finishTransition();
+        reset();
         return;
       }
-
-      /*
-      ==========================================
-      PREPARE COLOUR STRIPS
-      ==========================================
-      */
 
       gsap.set(overlay, {
         autoAlpha: 1,
         pointerEvents: "auto",
       });
 
-      gsap.set(strips, {
-        xPercent: 110,
-      });
-
-      /*
-      ==========================================
-      MAIN GSAP TIMELINE
-      ==========================================
-      */
+      gsap.set(black, { xPercent: 100 });
+      gsap.set(white, { xPercent: 100 });
 
       timeline = gsap.timeline({
-        onComplete: finishTransition,
+        onComplete: reset,
       });
 
       timeline
 
-        /*
-        01 — COLOUR STRIPS SLIDE IN
-
-        Each strip enters from the right.
-        The stagger creates the layered effect.
-        */
-
-        .to(strips, {
+        // 01. FULL BLACK SCREEN ENTERS
+        .to(black, {
           xPercent: 0,
-          duration: 0.72,
-          stagger: {
-            each: 0.105,
-            from: "start",
-          },
+          duration: 0.9,
           ease: "power4.inOut",
         })
 
-        /*
-        02 — CHANGE TO HOMEPAGE
-
-        The coloured strips completely cover
-        the outgoing page before navigation.
-        */
-
+        // 02. NAVIGATE UNDER THE BLACK SCREEN
         .add(() => {
           navigateHome(destination);
         })
 
-        /*
-        03 — HOLD
-
-        A short pause lets the homepage render
-        beneath the transition.
-        */
-
+        // 03. FULL WHITE SCREEN ENTERS
         .to(
-          {},
+          white,
           {
-            duration: 0.12,
+            xPercent: 0,
+            duration: 0.85,
+            ease: "power4.inOut",
           },
+          "-=0.15",
         )
 
-        /*
-        04 — COLOUR STRIPS SLIDE OUT
-
-        The strips travel towards the left,
-        revealing the homepage progressively.
-        */
-
-        .to(strips, {
-          xPercent: -110,
-          duration: 0.78,
-          stagger: {
-            each: 0.09,
-            from: "start",
+        // 04. BOTH FULL-SCREEN LAYERS EXIT
+        .to(
+          [black, white],
+          {
+            xPercent: -100,
+            duration: 1,
+            stagger: 0.12,
+            ease: "power4.inOut",
           },
-          ease: "power4.inOut",
-        });
+          "+=0.08",
+        );
     };
 
     document.addEventListener("click", handleClick);
@@ -243,19 +171,15 @@ function HomeTransition() {
 
       timeline?.kill();
 
-      gsap.killTweensOf([overlay, ...strips]);
+      gsap.killTweensOf([overlay, black, white]);
     };
   }, []);
 
   return (
     <div ref={overlayRef} className="home-transition" aria-hidden="true">
-      <div className="home-transition__strip home-transition__strip--gold" />
+      <div ref={blackRef} className="home-transition__black" />
 
-      <div className="home-transition__strip home-transition__strip--olive" />
-
-      <div className="home-transition__strip home-transition__strip--antique" />
-
-      <div className="home-transition__strip home-transition__strip--yellow" />
+      <div ref={whiteRef} className="home-transition__white" />
     </div>
   );
 }
