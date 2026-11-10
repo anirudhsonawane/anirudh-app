@@ -5,7 +5,11 @@ import {
   useRef,
   useState,
 } from "react";
+
 import { gsap } from "gsap";
+
+import Navbar from "../navbar/navbar";
+
 import "./collectionP1page.css";
 
 type CollectionState = {
@@ -218,6 +222,8 @@ function CollectionP1() {
       );
 
       // 3. Navigation reveal.
+      // The shared Navbar component retains the
+      // aperture-p1__nav animation classes.
 
       timeline.to(
         ".aperture-p1__nav",
@@ -279,6 +285,8 @@ function CollectionP1() {
         },
         1.75,
       );
+
+      // Start title marquee after the opening animation.
 
       if (!reducedMotion) {
         timeline.eventCallback("onComplete", () => {
@@ -396,6 +404,7 @@ function CollectionP1() {
       defaults: {
         ease: "power3.inOut",
       },
+
       onComplete: () => {
         openRef.current = false;
         closingRef.current = false;
@@ -538,25 +547,9 @@ function CollectionP1() {
 
       <div className="aperture-p1__background" ref={apertureRef} />
 
-      {/* NAVIGATION */}
+      {/* SHARED NAVIGATION */}
 
-      <header className="aperture-p1__header">
-        <nav className="aperture-p1__navigation">
-          <div className="aperture-p1__nav aperture-p1__nav-left">
-            <a href="/about">About</a>
-          </div>
-
-          <div className="aperture-p1__nav aperture-p1__nav-center">
-            <a href="/" aria-label="Realevate home">
-              <img src="/Ascent™ Black Geometric Logo.png" alt="Realevate" />
-            </a>
-          </div>
-
-          <div className="aperture-p1__nav aperture-p1__nav-right">
-            <a href="/contact">Contact</a>
-          </div>
-        </nav>
-      </header>
+      <Navbar variant="collection-p1" />
 
       {/* EDITORIAL CONTENT */}
 

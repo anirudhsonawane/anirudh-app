@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { gsap } from "gsap";
+import Navbar from "../navbar/navbar";
 import "./collectionPage.css";
 
 type CollectionConfig = {
@@ -557,23 +558,7 @@ function CollectionPage({
 
       {/* NAVIGATION */}
 
-      <header className="collection-page__header">
-        <nav className="collection-page__navigation">
-          <div className="collection-page__nav collection-page__nav-left">
-            <a href="/about">About</a>
-          </div>
-
-          <div className="collection-page__nav collection-page__nav-center">
-            <a href="/" aria-label="Realevate home">
-              <img src="/Ascent™ Black Geometric Logo.png" alt="Realevate" />
-            </a>
-          </div>
-
-          <div className="collection-page__nav collection-page__nav-right">
-            <a href="/contact">Contact</a>
-          </div>
-        </nav>
-      </header>
+      <Navbar variant="collection" />
 
       {/* COLLECTION CONTENT */}
 
@@ -637,7 +622,7 @@ function CollectionPage({
 
       <footer className="collection-page__footer">
         <div className="collection-page__meta">
-          <span>SCROLL TO DISCOVER</span>
+          <span>(SCROLL TO DISCOVER)</span>
         </div>
 
         <div className="collection-page__meta collection-page__footer-right">

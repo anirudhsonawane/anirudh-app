@@ -1,0 +1,287 @@
+/* ==========================================
+   SHARED NAVBAR
+========================================== */
+
+.shared-navbar__header,
+.shared-navbar,
+.shared-navbar * {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.shared-navbar__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+
+  width: 100%;
+  padding: var(--page-padding, 3rem);
+
+  pointer-events: none;
+}
+
+/* ==========================================
+   NAVIGATION CONTAINER
+========================================== */
+
+.shared-navbar {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  pointer-events: none;
+}
+
+/* ==========================================
+   NAVIGATION ITEMS
+========================================== */
+
+.shared-navbar__item {
+  display: flex;
+  align-items: center;
+
+  flex: 1 1 0;
+  min-width: 0;
+
+  pointer-events: auto;
+}
+
+/* LEFT */
+
+.shared-navbar__item--left {
+  justify-content: flex-start;
+}
+
+/* CENTER */
+
+.shared-navbar__item--center {
+  justify-content: center;
+}
+
+/* RIGHT */
+
+.shared-navbar__item--right {
+  justify-content: flex-end;
+}
+
+/* ==========================================
+   NAVIGATION LINKS
+========================================== */
+
+.shared-navbar__item a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #070707;
+
+  font-family: "Google Sans Flex", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.2;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    opacity 0.3s ease,
+    color 0.3s ease;
+}
+
+.shared-navbar__item a:hover {
+  opacity: 0.6;
+}
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.shared-navbar__item--center > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shared-navbar__logo {
+  display: block;
+
+  width: 300px;
+  height: auto;
+  max-height: 50px;
+
+  object-fit: contain;
+  background: transparent;
+}
+
+/* ==========================================
+   HOMEPAGE NAVBAR
+========================================== */
+
+/*
+ * IMPORTANT:
+ * Keep all homepage navbar items hidden during
+ * the initial black preloader.
+ *
+ * GSAP reveals them at the navbar reveal point.
+ */
+
+.shared-navbar--default .shared-navbar__item {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* HOMEPAGE LINK COLOURS */
+
+.shared-navbar--default .shared-navbar__item a {
+  color: #070707;
+}
+
+/* HOMEPAGE LOGO */
+
+.shared-navbar--default .shared-navbar__logo {
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================
+   LIGHT NAVBAR
+   ABOUT PAGE
+========================================== */
+
+.shared-navbar--light .shared-navbar__item a {
+  color: #ffffff;
+}
+
+.shared-navbar--light .shared-navbar__logo {
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================
+   COLLECTION NAVBAR
+========================================== */
+
+.shared-navbar__header--collection,
+.shared-navbar__header--collection-p1 {
+  position: absolute;
+}
+
+.shared-navbar--collection .shared-navbar__item a {
+  color: #ffffff;
+}
+
+.shared-navbar--collection .shared-navbar__logo {
+  filter: brightness(0) invert(1);
+}
+
+/* Preserve collection animation hooks */
+
+.shared-navbar--collection .shared-navbar__item,
+.shared-navbar--collection-p1 .shared-navbar__item {
+  will-change: transform, opacity;
+}
+
+/* ==========================================
+   CONTACT PAGE
+========================================== */
+
+.contact-page .shared-navbar__header {
+  position: fixed;
+  z-index: 1001;
+}
+
+.contact-page .shared-navbar__item a {
+  color: #111111;
+}
+
+.contact-page .shared-navbar__logo {
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* CONTACT PAGE NAVBAR */
+
+.contact-page .shared-navbar__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1001;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+}
+
+.contact-page .shared-navbar--light .shared-navbar__item {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.contact-page .shared-navbar--light .shared-navbar__item a {
+  color: #111111;
+  pointer-events: auto;
+}
+
+.contact-page .shared-navbar--light .shared-navbar__logo {
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* ==========================================
+   RESPONSIVE: TABLET
+========================================== */
+
+@media (max-width: 1024px) {
+  .shared-navbar__header {
+    padding: 2rem;
+  }
+
+  .shared-navbar__logo {
+    width: 240px;
+    max-height: 45px;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE: MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+  .shared-navbar__header {
+    padding: 1.5rem;
+  }
+
+  .shared-navbar__item a {
+    font-size: 0.9rem;
+  }
+
+  .shared-navbar__logo {
+    width: 170px;
+    max-height: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shared-navbar__header {
+    padding: 1.25rem;
+  }
+
+  .shared-navbar__item a {
+    font-size: 0.78rem;
+  }
+
+  .shared-navbar__logo {
+    width: 115px;
+    max-height: 32px;
+  }
+}

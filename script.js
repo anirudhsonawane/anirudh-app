@@ -6,11 +6,9 @@ import { SplitText } from "gsap/SplitText";
 // ROUTE PROTECTION
 // ==========================================
 
-const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+const normalizePath = (path) => path.replace(/\/+$/, "") || "/";
 
-if (currentPath !== "/") {
-  // Do not initialize homepage animations on secondary pages.
-} else {
+if (normalizePath(window.location.pathname) === "/") {
   // ==========================================
   // HOMEPAGE INITIALIZATION
   // ==========================================
@@ -41,6 +39,10 @@ if (currentPath !== "/") {
     // ==========================================
 
     const splitText = (selector, type, className) => {
+      if (!document.querySelector(selector)) {
+        return null;
+      }
+
       return SplitText.create(selector, {
         type,
         [`${type}Class`]: className,
@@ -48,11 +50,34 @@ if (currentPath !== "/") {
       });
     };
 
-    splitText(
-      ".nav-item:not(:nth-child(2)) a, .hero-copy > p, .footer-copyright",
-      "lines",
-      "line",
+    /*
+     * Split only the homepage content text.
+     *
+     * The shared navbar is animated as three complete
+     * items, so its logo is not included in SplitText.
+     */
+
+    splitText(".hero-copy > p, .footer-copyright", "lines", "line");
+
+    // ==========================================
+    // SHARED NAVBAR INITIAL STATE
+    // ==========================================
+
+    const navbarItems = gsap.utils.toArray(
+      ".shared-navbar--default .shared-navbar__item",
     );
+
+    /*
+     * Keep About, logo and Contact Us hidden until
+     * the navbar reveal point in the intro timeline.
+     */
+
+    if (navbarItems.length) {
+      gsap.set(navbarItems, {
+        autoAlpha: 0,
+        y: 18,
+      });
+    }
 
     // ==========================================
     // COUNTER SETUP
@@ -71,34 +96,36 @@ if (currentPath !== "/") {
         }
       });
 
-      const digitHeight = counterColumns[0]
-        .querySelector("span")
-        .getBoundingClientRect().height;
+      const firstDigit = counterColumns[0].querySelector("span");
 
-      const animateCounterTo = (value) => {
-        const tens = Math.floor(value / 10);
-        const ones = value % 10;
+      if (firstDigit) {
+        const digitHeight = firstDigit.getBoundingClientRect().height;
 
-        gsap.to(counterColumns[0], {
-          y: -tens * digitHeight,
-          duration: 0.75,
-          ease: "hop",
-          overwrite: true,
-        });
+        const animateCounterTo = (value) => {
+          const tens = Math.floor(value / 10);
+          const ones = value % 10;
 
-        gsap.to(counterColumns[1], {
-          y: -ones * digitHeight,
-          duration: 0.75,
-          ease: "hop",
-          overwrite: true,
-        });
-      };
+          gsap.to(counterColumns[0], {
+            y: -tens * digitHeight,
+            duration: 0.75,
+            ease: "hop",
+            overwrite: true,
+          });
 
-      gsap.delayedCall(0.25, () => animateCounterTo(0));
-      gsap.delayedCall(1, () => animateCounterTo(27));
-      gsap.delayedCall(1.75, () => animateCounterTo(42));
-      gsap.delayedCall(2.5, () => animateCounterTo(68));
-      gsap.delayedCall(3.25, () => animateCounterTo(99));
+          gsap.to(counterColumns[1], {
+            y: -ones * digitHeight,
+            duration: 0.75,
+            ease: "hop",
+            overwrite: true,
+          });
+        };
+
+        gsap.delayedCall(0.25, () => animateCounterTo(0));
+        gsap.delayedCall(1, () => animateCounterTo(27));
+        gsap.delayedCall(1.75, () => animateCounterTo(42));
+        gsap.delayedCall(2.5, () => animateCounterTo(68));
+        gsap.delayedCall(3.25, () => animateCounterTo(99));
+      }
     } else {
       console.error("Counter requires exactly two digit columns.");
     }
@@ -130,6 +157,9 @@ if (currentPath !== "/") {
 
     const tl = gsap.timeline({
       delay: 0.5,
+      onComplete: () => {
+        introComplete = true;
+      },
     });
 
     // ==========================================
@@ -211,18 +241,22 @@ if (currentPath !== "/") {
     );
 
     // ==========================================
-    // NAVIGATION
+    // SHARED NAVBAR REVEAL
     // ==========================================
 
-    tl.to(
-      "nav .line, nav .nav-brand",
-      {
-        ...revealProps,
-        autoAlpha: 1,
-        stagger: 0.1,
-      },
-      "<0.125",
-    );
+    if (navbarItems.length) {
+      tl.to(
+        navbarItems,
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 1,
+          ease: "power4.out",
+          stagger: 0.1,
+        },
+        "<0.125",
+      );
+    }
 
     // ==========================================
     // HERO DESCRIPTION
@@ -242,13 +276,9 @@ if (currentPath !== "/") {
     // ==========================================
 
     const calloutTop = document.querySelector(".hero-callout-border-top");
-
     const calloutRight = document.querySelector(".hero-callout-border-right");
-
     const calloutBottom = document.querySelector(".hero-callout-border-bottom");
-
     const calloutLeft = document.querySelector(".hero-callout-border-left");
-
     const calloutText = document.querySelector(".hero-callout p");
 
     // ==========================================
@@ -338,14 +368,6 @@ if (currentPath !== "/") {
         "calloutComplete",
       );
     }
-
-    // ==========================================
-    // INTRO COMPLETION GATE
-    // ==========================================
-
-    tl.eventCallback("onComplete", () => {
-      introComplete = true;
-    });
 
     // ==========================================
     // HOMEPAGE -> FOUR COLLECTIONS TRANSITION
@@ -466,21 +488,13 @@ if (currentPath !== "/") {
         }
 
         function handleWheel(event) {
-          // IMPORTANT:
-          // Do not allow homepage scroll navigation to run
-          // while any collection page is currently open.
-
           if (isCollectionPageActive()) {
             return;
           }
 
           const atPageTop = window.scrollY <= 2;
 
-          if (!atPageTop) {
-            return;
-          }
-
-          if (event.deltaY === 0) {
+          if (!atPageTop || event.deltaY === 0) {
             return;
           }
 
@@ -489,9 +503,7 @@ if (currentPath !== "/") {
 
           if (transitionRunning || wheelGestureActive) {
             event.preventDefault();
-
             releaseWheelLock();
-
             return;
           }
 
@@ -500,13 +512,12 @@ if (currentPath !== "/") {
             return;
           }
 
-          // ONE DOWNWARD SCROLL = FULL TRANSITION
+          // DOWNWARD SCROLL: OPEN COLLECTIONS
 
           if (scrollingDown && !transitionCompleted) {
             event.preventDefault();
 
             wheelGestureActive = true;
-
             releaseWheelLock();
 
             transitionTimeline.play();
@@ -514,13 +525,12 @@ if (currentPath !== "/") {
             return;
           }
 
-          // UPWARD SCROLL = REVERSE TRANSITION
+          // UPWARD SCROLL: RETURN TO HOMEPAGE
 
           if (scrollingUp && transitionCompleted) {
             event.preventDefault();
 
             wheelGestureActive = true;
-
             releaseWheelLock();
 
             transitionTimeline.reverse();
@@ -540,21 +550,19 @@ if (currentPath !== "/") {
         let touchGestureTriggered = false;
 
         function handleTouchStart(event) {
+          if (!event.touches.length) return;
+
           touchStartY = event.touches[0].clientY;
-
           touchActive = true;
-
           touchGestureTriggered = false;
         }
 
         function handleTouchMove(event) {
-          // IMPORTANT:
-          // Ignore homepage touch navigation while a collection
-          // page is open. This protects all four collections.
-
           if (isCollectionPageActive()) {
             return;
           }
+
+          if (!event.touches.length) return;
 
           const atPageTop = window.scrollY <= 2;
 
@@ -573,32 +581,29 @@ if (currentPath !== "/") {
           }
 
           const currentY = event.touches[0].clientY;
-
           const difference = touchStartY - currentY;
 
           if (Math.abs(difference) < 8) {
             return;
           }
 
-          // FINGER MOVING UPWARDS = DOWNWARD SCROLL
+          // FINGER MOVING UP: OPEN COLLECTIONS
 
           if (difference > 0 && !transitionCompleted) {
             event.preventDefault();
 
             touchGestureTriggered = true;
-
             transitionTimeline.play();
 
             return;
           }
 
-          // FINGER MOVING DOWNWARDS = UPWARD SCROLL
+          // FINGER MOVING DOWN: RETURN TO HOMEPAGE
 
           if (difference < 0 && transitionCompleted) {
             event.preventDefault();
 
             touchGestureTriggered = true;
-
             transitionTimeline.reverse();
           }
         }
@@ -657,17 +662,52 @@ if (currentPath !== "/") {
   // ==========================================
 
   let homepageInitialized = false;
+  let navbarObserver = null;
 
   const startHomepage = () => {
-    const route = window.location.pathname.replace(/\/+$/, "") || "/";
+    if (normalizePath(window.location.pathname) !== "/") {
+      return;
+    }
 
-    if (route !== "/") return;
+    if (homepageInitialized) {
+      return;
+    }
 
-    if (homepageInitialized) return;
+    const navbarRoot = document.getElementById("home-navbar-root");
 
-    homepageInitialized = true;
+    if (!navbarRoot) {
+      console.error("Homepage navbar mount #home-navbar-root was not found.");
+      return;
+    }
 
-    initializeHomepage();
+    const initializeWhenNavbarIsReady = () => {
+      if (homepageInitialized) {
+        return;
+      }
+
+      const navbar = navbarRoot.querySelector(".shared-navbar--default");
+
+      if (!navbar) {
+        return;
+      }
+
+      homepageInitialized = true;
+
+      if (navbarObserver) {
+        navbarObserver.disconnect();
+      }
+
+      initializeHomepage();
+    };
+
+    navbarObserver = new MutationObserver(initializeWhenNavbarIsReady);
+
+    navbarObserver.observe(navbarRoot, {
+      childList: true,
+      subtree: true,
+    });
+
+    initializeWhenNavbarIsReady();
   };
 
   if (document.readyState === "loading") {

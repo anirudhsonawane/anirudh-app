@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import Navbar from "../navbar/navbar";
 import "./contactPageTransition.css";
 
 type ContactTab = "investors" | "partnership";
@@ -14,25 +15,7 @@ function ContactUS() {
     <main className="contact-page">
       {/* NAVIGATION */}
 
-      <nav className="navigation contact-navigation">
-        <div className="nav-item">
-          <a href="/about">About</a>
-        </div>
-
-        <div className="nav-item nav-brand">
-          <a href="/" aria-label="Realevate Home">
-            <img
-              src="/Ascent™ Black Geometric Logo.png"
-              alt="Realevate"
-              className="nav-logo"
-            />
-          </a>
-        </div>
-
-        <div className="nav-item">
-          <a href="/contact">Contact Us</a>
-        </div>
-      </nav>
+      <Navbar variant="light" />
 
       {/* CONTACT CONTENT */}
 

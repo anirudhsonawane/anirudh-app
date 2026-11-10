@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Navbar from "../navbar/navbar";
 import "./aboutPageTransition.css";
 
 const About = () => {
@@ -72,25 +73,7 @@ const About = () => {
             NAVIGATION
         ===================================== */}
 
-        <nav className="navigation about-navigation">
-          <div className="nav-item nav-left">
-            <a href="#about">About</a>
-          </div>
-
-          <div className="nav-item nav-brand">
-            <a href="/" aria-label="Realevate Home">
-              <img
-                src="/Ascent™ Black Geometric Logo.png"
-                alt="Realevate"
-                className="nav-logo"
-              />
-            </a>
-          </div>
-
-          <div className="nav-item nav-right">
-            <a href="/contact">Contact Us</a>
-          </div>
-        </nav>
+        <Navbar variant="light" />
 
         {/* =====================================
             CONTINUOUS ABOUT US MARQUEE
