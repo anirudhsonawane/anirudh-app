@@ -5,11 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-
 import { gsap } from "gsap";
-
-import Navbar from "../navbar/navbar";
-
 import "./collectionP1page.css";
 
 type CollectionState = {
@@ -149,7 +145,6 @@ function CollectionP1() {
       });
 
       // Image starts at the clicked card.
-
       gsap.set(image, {
         position: "fixed",
         top: origin.top,
@@ -161,13 +156,11 @@ function CollectionP1() {
       });
 
       // Aperture starts at the clicked image centre.
-
       gsap.set(aperture, {
         clipPath: `circle(0px at ${origin.centerX}px ${origin.centerY}px)`,
       });
 
       // Initial navigation state.
-
       gsap.set(".aperture-p1__nav", {
         y: -15,
         opacity: 0,
@@ -199,7 +192,6 @@ function CollectionP1() {
       });
 
       // 1. Expand the aperture.
-
       timeline.to(aperture, {
         clipPath: `circle(${apertureSize}px at ${origin.centerX}px ${origin.centerY}px)`,
         duration: reducedMotion ? 0 : 1.25,
@@ -207,7 +199,6 @@ function CollectionP1() {
       });
 
       // 2. Move the image into its editorial position.
-
       timeline.to(
         image,
         {
@@ -222,9 +213,6 @@ function CollectionP1() {
       );
 
       // 3. Navigation reveal.
-      // The shared Navbar component retains the
-      // aperture-p1__nav animation classes.
-
       timeline.to(
         ".aperture-p1__nav",
         {
@@ -237,7 +225,6 @@ function CollectionP1() {
       );
 
       // 4. Eyebrow reveal.
-
       timeline.to(
         ".aperture-p1__eyebrow",
         {
@@ -249,7 +236,6 @@ function CollectionP1() {
       );
 
       // 5. Title reveal.
-
       timeline.to(
         ".aperture-p1__title-line",
         {
@@ -262,7 +248,6 @@ function CollectionP1() {
       );
 
       // 6. Description reveal.
-
       timeline.to(
         ".aperture-p1__description",
         {
@@ -274,7 +259,6 @@ function CollectionP1() {
       );
 
       // 7. Footer reveal.
-
       timeline.to(
         ".aperture-p1__meta",
         {
@@ -285,8 +269,6 @@ function CollectionP1() {
         },
         1.75,
       );
-
-      // Start title marquee after the opening animation.
 
       if (!reducedMotion) {
         timeline.eventCallback("onComplete", () => {
@@ -312,6 +294,32 @@ function CollectionP1() {
       document.body.style.overflow = previousBodyOverflow;
     };
   }, [collection]);
+
+  // --------------------------------------------------
+  // CLOSE P1 WHEN THE HOME TRANSITION STARTS
+  // --------------------------------------------------
+
+  useEffect(() => {
+    const handleCloseFromHome = () => {
+      marqueeRef.current?.kill();
+      openingTimelineRef.current?.kill();
+      closingTimelineRef.current?.kill();
+
+      openRef.current = false;
+      closingRef.current = false;
+
+      setCollection(null);
+    };
+
+    window.addEventListener("ascent:close-collection", handleCloseFromHome);
+
+    return () => {
+      window.removeEventListener(
+        "ascent:close-collection",
+        handleCloseFromHome,
+      );
+    };
+  }, []);
 
   // --------------------------------------------------
   // ROUTE NAVIGATION HANDOFF
@@ -365,8 +373,6 @@ function CollectionP1() {
     const image = imageRef.current;
 
     // Use the current card position if available.
-    // This keeps the image aligned with the visible grid.
-
     const originalCard = document.querySelector<HTMLElement>(
       ".collection-panel.sea",
     );
@@ -395,7 +401,6 @@ function CollectionP1() {
     const duration = reducedMotion ? 0 : 0.95;
 
     // Prevent another interaction while the reverse animation runs.
-
     gsap.set(root, {
       pointerEvents: "none",
     });
@@ -404,7 +409,6 @@ function CollectionP1() {
       defaults: {
         ease: "power3.inOut",
       },
-
       onComplete: () => {
         openRef.current = false;
         closingRef.current = false;
@@ -415,8 +419,7 @@ function CollectionP1() {
 
     closingTimelineRef.current = timeline;
 
-    // IMAGE: travel back to the exact collection card.
-
+    // Image travels back to the collection card.
     timeline.to(
       image,
       {
@@ -430,8 +433,7 @@ function CollectionP1() {
       0,
     );
 
-    // APERTURE: contract around the original card position.
-
+    // Aperture contracts around the original card position.
     timeline.to(
       aperture,
       {
@@ -442,8 +444,7 @@ function CollectionP1() {
       0,
     );
 
-    // NAVIGATION: fade and lift away.
-
+    // Navigation fades and lifts away.
     timeline.to(
       ".aperture-p1__nav",
       {
@@ -456,8 +457,7 @@ function CollectionP1() {
       0,
     );
 
-    // COLLECTION LABEL.
-
+    // Collection label.
     timeline.to(
       ".aperture-p1__eyebrow",
       {
@@ -469,8 +469,7 @@ function CollectionP1() {
       0,
     );
 
-    // TITLE: move down while fading out.
-
+    // Title moves down while fading out.
     timeline.to(
       ".aperture-p1__title-line",
       {
@@ -483,8 +482,7 @@ function CollectionP1() {
       0,
     );
 
-    // DESCRIPTION AND BUTTON.
-
+    // Description.
     timeline.to(
       ".aperture-p1__description",
       {
@@ -496,8 +494,7 @@ function CollectionP1() {
       0,
     );
 
-    // FOOTER.
-
+    // Footer.
     timeline.to(
       ".aperture-p1__meta",
       {
@@ -544,15 +541,28 @@ function CollectionP1() {
       aria-label="By The Sea collection"
     >
       {/* APERTURE BACKGROUND */}
-
       <div className="aperture-p1__background" ref={apertureRef} />
 
-      {/* SHARED NAVIGATION */}
+      {/* NAVIGATION */}
+      <header className="aperture-p1__header">
+        <nav className="aperture-p1__navigation">
+          <div className="aperture-p1__nav aperture-p1__nav-left">
+            <a href="/about">About</a>
+          </div>
 
-      <Navbar variant="collection-p1" />
+          <div className="aperture-p1__nav aperture-p1__nav-center">
+            <a href="/" aria-label="Realevate home">
+              <img src="/Ascent™ Black Geometric Logo.png" alt="Realevate" />
+            </a>
+          </div>
+
+          <div className="aperture-p1__nav aperture-p1__nav-right">
+            <a href="/contact">Contact</a>
+          </div>
+        </nav>
+      </header>
 
       {/* EDITORIAL CONTENT */}
-
       <main className="aperture-p1__content">
         <div className="aperture-p1__copy">
           <div className="aperture-p1__eyebrow"></div>
@@ -579,7 +589,6 @@ function CollectionP1() {
         </div>
 
         {/* PROPERTY IMAGE */}
-
         <div className="aperture-p1__image" ref={imageRef}>
           <img src={collection.image} alt="By The Sea coastal property" />
 
@@ -591,7 +600,6 @@ function CollectionP1() {
       </main>
 
       {/* FOOTER */}
-
       <footer className="aperture-p1__footer">
         <div className="aperture-p1__meta">
           <span>SCROLL TO DISCOVER</span>

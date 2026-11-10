@@ -6,9 +6,11 @@ import { SplitText } from "gsap/SplitText";
 // ROUTE PROTECTION
 // ==========================================
 
-const normalizePath = (path) => path.replace(/\/+$/, "") || "/";
+const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
 
-if (normalizePath(window.location.pathname) === "/") {
+if (currentPath !== "/") {
+  // Do not initialize homepage animations on secondary pages.
+} else {
   // ==========================================
   // HOMEPAGE INITIALIZATION
   // ==========================================
@@ -39,10 +41,6 @@ if (normalizePath(window.location.pathname) === "/") {
     // ==========================================
 
     const splitText = (selector, type, className) => {
-      if (!document.querySelector(selector)) {
-        return null;
-      }
-
       return SplitText.create(selector, {
         type,
         [`${type}Class`]: className,
@@ -50,34 +48,11 @@ if (normalizePath(window.location.pathname) === "/") {
       });
     };
 
-    /*
-     * Split only the homepage content text.
-     *
-     * The shared navbar is animated as three complete
-     * items, so its logo is not included in SplitText.
-     */
-
-    splitText(".hero-copy > p, .footer-copyright", "lines", "line");
-
-    // ==========================================
-    // SHARED NAVBAR INITIAL STATE
-    // ==========================================
-
-    const navbarItems = gsap.utils.toArray(
-      ".shared-navbar--default .shared-navbar__item",
+    splitText(
+      ".nav-item:not(:nth-child(2)) a, .hero-copy > p, .footer-copyright",
+      "lines",
+      "line",
     );
-
-    /*
-     * Keep About, logo and Contact Us hidden until
-     * the navbar reveal point in the intro timeline.
-     */
-
-    if (navbarItems.length) {
-      gsap.set(navbarItems, {
-        autoAlpha: 0,
-        y: 18,
-      });
-    }
 
     // ==========================================
     // COUNTER SETUP
@@ -89,43 +64,39 @@ if (normalizePath(window.location.pathname) === "/") {
       counterColumns.forEach((column) => {
         for (let digit = 0; digit <= 9; digit++) {
           const digitElement = document.createElement("span");
-
           digitElement.textContent = digit;
-
           column.appendChild(digitElement);
         }
       });
 
-      const firstDigit = counterColumns[0].querySelector("span");
+      const digitHeight = counterColumns[0]
+        .querySelector("span")
+        .getBoundingClientRect().height;
 
-      if (firstDigit) {
-        const digitHeight = firstDigit.getBoundingClientRect().height;
+      const animateCounterTo = (value) => {
+        const tens = Math.floor(value / 10);
+        const ones = value % 10;
 
-        const animateCounterTo = (value) => {
-          const tens = Math.floor(value / 10);
-          const ones = value % 10;
+        gsap.to(counterColumns[0], {
+          y: -tens * digitHeight,
+          duration: 0.75,
+          ease: "hop",
+          overwrite: true,
+        });
 
-          gsap.to(counterColumns[0], {
-            y: -tens * digitHeight,
-            duration: 0.75,
-            ease: "hop",
-            overwrite: true,
-          });
+        gsap.to(counterColumns[1], {
+          y: -ones * digitHeight,
+          duration: 0.75,
+          ease: "hop",
+          overwrite: true,
+        });
+      };
 
-          gsap.to(counterColumns[1], {
-            y: -ones * digitHeight,
-            duration: 0.75,
-            ease: "hop",
-            overwrite: true,
-          });
-        };
-
-        gsap.delayedCall(0.25, () => animateCounterTo(0));
-        gsap.delayedCall(1, () => animateCounterTo(27));
-        gsap.delayedCall(1.75, () => animateCounterTo(42));
-        gsap.delayedCall(2.5, () => animateCounterTo(68));
-        gsap.delayedCall(3.25, () => animateCounterTo(99));
-      }
+      gsap.delayedCall(0.25, () => animateCounterTo(0));
+      gsap.delayedCall(1, () => animateCounterTo(27));
+      gsap.delayedCall(1.75, () => animateCounterTo(42));
+      gsap.delayedCall(2.5, () => animateCounterTo(68));
+      gsap.delayedCall(3.25, () => animateCounterTo(99));
     } else {
       console.error("Counter requires exactly two digit columns.");
     }
@@ -157,9 +128,6 @@ if (normalizePath(window.location.pathname) === "/") {
 
     const tl = gsap.timeline({
       delay: 0.5,
-      onComplete: () => {
-        introComplete = true;
-      },
     });
 
     // ==========================================
@@ -168,7 +136,6 @@ if (normalizePath(window.location.pathname) === "/") {
 
     document.querySelectorAll(".hero-img").forEach((heroImage, index) => {
       const startTime = index * 0.5;
-
       const image = heroImage.querySelector("img");
 
       if (!image) return;
@@ -240,23 +207,20 @@ if (normalizePath(window.location.pathname) === "/") {
       "<0.65",
     );
 
-    // ==========================================
-    // SHARED NAVBAR REVEAL
-    // ==========================================
+    // SHARED HOMEPAGE NAVBAR
 
-    if (navbarItems.length) {
-      tl.to(
-        navbarItems,
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 1,
-          ease: "power4.out",
-          stagger: 0.1,
-        },
-        "<0.125",
-      );
-    }
+    tl.to(
+      ".shared-navbar--default .shared-navbar__item",
+      {
+        y: 0,
+        autoAlpha: 1,
+        duration: 1,
+        ease: "power4.out",
+        stagger: 0.1,
+        pointerEvents: "auto",
+      },
+      "<0.125",
+    );
 
     // ==========================================
     // HERO DESCRIPTION
@@ -370,6 +334,14 @@ if (normalizePath(window.location.pathname) === "/") {
     }
 
     // ==========================================
+    // INTRO COMPLETION GATE
+    // ==========================================
+
+    tl.eventCallback("onComplete", () => {
+      introComplete = true;
+    });
+
+    // ==========================================
     // HOMEPAGE -> FOUR COLLECTIONS TRANSITION
     // ==========================================
 
@@ -392,6 +364,28 @@ if (normalizePath(window.location.pathname) === "/") {
         });
 
         introComplete = true;
+
+        // Restore the homepage when returning from P1.
+        const handleProgrammaticHomeReturn = () => {
+          gsap.set(homepage, {
+            scale: 1,
+            x: 0,
+            y: 0,
+            clearProps: "transform",
+          });
+
+          gsap.set(underneathGrid, {
+            clipPath: "inset(100% 0% 0% 0%)",
+          });
+
+          transitionCompleted = false;
+          transitionRunning = false;
+        };
+
+        window.addEventListener(
+          "ascent:home-return",
+          handleProgrammaticHomeReturn,
+        );
       } else {
         // ==========================================
         // INITIAL HOMEPAGE STATE
@@ -466,6 +460,38 @@ if (normalizePath(window.location.pathname) === "/") {
         );
 
         // ==========================================
+        // PROGRAMMATIC RETURN TO HOMEPAGE
+        // ==========================================
+
+        const handleProgrammaticHomeReturn = () => {
+          if (transitionTimeline.progress() > 0) {
+            // Reverse from the current position.
+            // This also handles a transition that is still running.
+            transitionTimeline.reverse();
+          } else {
+            // Fallback if the timeline is already at its start.
+            gsap.set(homepage, {
+              scale: 1,
+              x: 0,
+              y: 0,
+              clearProps: "transform",
+            });
+
+            gsap.set(underneathGrid, {
+              clipPath: "inset(100% 0% 0% 0%)",
+            });
+
+            transitionCompleted = false;
+            transitionRunning = false;
+          }
+        };
+
+        window.addEventListener(
+          "ascent:home-return",
+          handleProgrammaticHomeReturn,
+        );
+
+        // ==========================================
         // WHEEL INPUT CONTROL
         // ==========================================
 
@@ -488,13 +514,20 @@ if (normalizePath(window.location.pathname) === "/") {
         }
 
         function handleWheel(event) {
+          // Do not run homepage scroll navigation
+          // while a collection page is currently open.
+
           if (isCollectionPageActive()) {
             return;
           }
 
           const atPageTop = window.scrollY <= 2;
 
-          if (!atPageTop || event.deltaY === 0) {
+          if (!atPageTop) {
+            return;
+          }
+
+          if (event.deltaY === 0) {
             return;
           }
 
@@ -503,7 +536,9 @@ if (normalizePath(window.location.pathname) === "/") {
 
           if (transitionRunning || wheelGestureActive) {
             event.preventDefault();
+
             releaseWheelLock();
+
             return;
           }
 
@@ -512,12 +547,13 @@ if (normalizePath(window.location.pathname) === "/") {
             return;
           }
 
-          // DOWNWARD SCROLL: OPEN COLLECTIONS
+          // ONE DOWNWARD SCROLL = FULL TRANSITION
 
           if (scrollingDown && !transitionCompleted) {
             event.preventDefault();
 
             wheelGestureActive = true;
+
             releaseWheelLock();
 
             transitionTimeline.play();
@@ -525,12 +561,13 @@ if (normalizePath(window.location.pathname) === "/") {
             return;
           }
 
-          // UPWARD SCROLL: RETURN TO HOMEPAGE
+          // UPWARD SCROLL = REVERSE TRANSITION
 
           if (scrollingUp && transitionCompleted) {
             event.preventDefault();
 
             wheelGestureActive = true;
+
             releaseWheelLock();
 
             transitionTimeline.reverse();
@@ -550,19 +587,20 @@ if (normalizePath(window.location.pathname) === "/") {
         let touchGestureTriggered = false;
 
         function handleTouchStart(event) {
-          if (!event.touches.length) return;
-
           touchStartY = event.touches[0].clientY;
+
           touchActive = true;
+
           touchGestureTriggered = false;
         }
 
         function handleTouchMove(event) {
+          // Ignore homepage touch navigation while a collection
+          // page is open. This protects all four collections.
+
           if (isCollectionPageActive()) {
             return;
           }
-
-          if (!event.touches.length) return;
 
           const atPageTop = window.scrollY <= 2;
 
@@ -581,29 +619,32 @@ if (normalizePath(window.location.pathname) === "/") {
           }
 
           const currentY = event.touches[0].clientY;
+
           const difference = touchStartY - currentY;
 
           if (Math.abs(difference) < 8) {
             return;
           }
 
-          // FINGER MOVING UP: OPEN COLLECTIONS
+          // FINGER MOVING UPWARDS = DOWNWARD SCROLL
 
           if (difference > 0 && !transitionCompleted) {
             event.preventDefault();
 
             touchGestureTriggered = true;
+
             transitionTimeline.play();
 
             return;
           }
 
-          // FINGER MOVING DOWN: RETURN TO HOMEPAGE
+          // FINGER MOVING DOWNWARDS = UPWARD SCROLL
 
           if (difference < 0 && transitionCompleted) {
             event.preventDefault();
 
             touchGestureTriggered = true;
+
             transitionTimeline.reverse();
           }
         }
@@ -665,13 +706,11 @@ if (normalizePath(window.location.pathname) === "/") {
   let navbarObserver = null;
 
   const startHomepage = () => {
-    if (normalizePath(window.location.pathname) !== "/") {
-      return;
-    }
+    const route = window.location.pathname.replace(/\/+$/, "") || "/";
 
-    if (homepageInitialized) {
-      return;
-    }
+    if (route !== "/") return;
+
+    if (homepageInitialized) return;
 
     const navbarRoot = document.getElementById("home-navbar-root");
 
@@ -681,15 +720,11 @@ if (normalizePath(window.location.pathname) === "/") {
     }
 
     const initializeWhenNavbarIsReady = () => {
-      if (homepageInitialized) {
-        return;
-      }
+      if (homepageInitialized) return;
 
       const navbar = navbarRoot.querySelector(".shared-navbar--default");
 
-      if (!navbar) {
-        return;
-      }
+      if (!navbar) return;
 
       homepageInitialized = true;
 

@@ -38,7 +38,6 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
     let timeline: gsap.core.Timeline | null = null;
     let navigating = false;
 
-    // Reset overlay to its hidden starting position.
     const resetTransition = () => {
       gsap.set(overlay, {
         autoAlpha: 0,
@@ -54,7 +53,7 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
 
     resetTransition();
 
-    // Navigate to homepage while the overlay covers the screen.
+    // Used when returning from About or Contact.
     const navigateHome = (destination: URL) => {
       window.history.pushState(
         {},
@@ -68,14 +67,22 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
       });
     };
 
-    // Finish and clean up the transition.
+    // Used when returning from the P1 overlay.
+    // The URL is already "/", so do not push another history entry.
+    const returnFromCollection = () => {
+      flushSync(() => {
+        window.dispatchEvent(new Event("ascent:close-collection"));
+      });
+
+      window.dispatchEvent(new Event("ascent:home-return"));
+    };
+
     const finishTransition = () => {
       resetTransition();
       timeline = null;
       navigating = false;
     };
 
-    // Intercept links returning to homepage.
     const handleClick = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -106,16 +113,27 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
 
       const destination = new URL(anchor.href, window.location.href);
 
-      if (destination.origin !== window.location.origin) {
-        return;
-      }
+      if (destination.origin !== window.location.origin) return;
 
       const destinationPath = normalizePath(destination.pathname);
-
       const activePath = currentPathRef.current;
 
-      // Only animate when returning to homepage.
-      if (destinationPath !== HOME_PATH || activePath === HOME_PATH) {
+      // P1 is an overlay on the homepage, not a separate route.
+      const isCollectionViewActive = Boolean(
+        document.querySelector(".aperture-p1"),
+      );
+
+      const isReturningFromCollection =
+        destinationPath === HOME_PATH &&
+        activePath === HOME_PATH &&
+        isCollectionViewActive;
+
+      // Only handle links returning to the homepage.
+      // Ignore the homepage logo when no collection overlay is open.
+      if (
+        destinationPath !== HOME_PATH ||
+        (activePath === HOME_PATH && !isCollectionViewActive)
+      ) {
         return;
       }
 
@@ -129,53 +147,59 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
 
       timeline?.kill();
 
+      const completeNavigation = () => {
+        if (isReturningFromCollection) {
+          returnFromCollection();
+        } else {
+          navigateHome(destination);
+        }
+      };
+
       // Reduced-motion fallback.
       if (reducedMotion) {
-        navigateHome(destination);
+        completeNavigation();
         finishTransition();
         return;
       }
 
-      // Prepare overlay.
+      // Prepare the transition overlay.
       gsap.set(overlay, {
         autoAlpha: 1,
         clipPath: "inset(0 100% 0 0)",
         pointerEvents: "auto",
       });
 
-      // Ensure typography is visible before the wipe starts.
       gsap.set(content, {
         autoAlpha: 1,
         y: 0,
       });
 
-      // Page wipe animation. Typography remains static.
       timeline = gsap.timeline({
         onComplete: finishTransition,
       });
 
       timeline
-        // 1. Cover current page.
+        // 1. Cover the current page.
         .to(overlay, {
           clipPath: "inset(0 0% 0 0)",
           duration: 1.35,
           ease: "power4.inOut",
         })
 
-        // 2. Change route while covered.
+        // 2. Change page or close P1 while covered.
         .add(() => {
-          navigateHome(destination);
+          completeNavigation();
         })
 
-        // 3. Hold the static typography.
+        // 3. Give the homepage transition time to reverse.
         .to(
           {},
           {
-            duration: 0.1,
+            duration: isReturningFromCollection ? 0.5 : 0.1,
           },
         )
 
-        // 4. Reveal homepage.
+        // 4. Reveal the homepage.
         .to(overlay, {
           clipPath: "inset(0 0 0 100%)",
           duration: 1.45,
