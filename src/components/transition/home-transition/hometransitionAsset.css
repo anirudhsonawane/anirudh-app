@@ -1,72 +1,272 @@
-/* ==========================================
-   FULL PAGE HOMEPAGE TRANSITION
-========================================== */
+/* =====================================================
+   ASCENT — LONG EXPOSURE
+   STATIC TYPOGRAPHY / CINEMATIC PAGE WIPE
+===================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+/* =====================================================
+   RESET
+===================================================== */
+
+.home-transition,
+.home-transition * {
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   MAIN OVERLAY
+===================================================== */
 
 .home-transition {
   position: fixed;
   inset: 0;
 
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
+  z-index: 1000000;
 
-  z-index: 200000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
 
   overflow: hidden;
+  isolation: isolate;
+
+  background-color: #ffffff;
 
   visibility: hidden;
   opacity: 0;
 
   pointer-events: none;
 
-  isolation: isolate;
+  clip-path: inset(0 100% 0 0);
+
+  will-change: clip-path, opacity;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==========================================
-   BLACK FULL PAGE
-========================================== */
+/* =====================================================
+   CONTENT CONTAINER
+===================================================== */
 
-.home-transition__black,
-.home-transition__white {
-  position: absolute;
+.home-transition__content {
+  position: relative;
+  z-index: 2;
 
-  inset: 0;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: clamp(5px, 1.2vh, 14px);
 
   width: 100%;
-  height: 100%;
+  padding: 24px;
 
-  will-change: transform;
+  text-align: center;
 
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  transform: translateY(-35px);
+
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* ==========================================
-   STAR BLUE LAYER
-========================================== */
+/* =====================================================
+   BASE TYPOGRAPHY
+===================================================== */
 
-.home-transition__black {
-  z-index: 1;
-  background: #17283d;
-  transform: translate3d(100%, 0, 0);
+.home-transition__word {
+  position: relative;
+  z-index: 3;
+
+  display: block;
+
+  width: max-content;
+  max-width: 95vw;
+
+  /* WORD COLOUR */
+  color: #202e64 !important;
+  -webkit-text-fill-color: #202e64 !important;
+
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: clamp(85px, 13vw, 190px);
+
+  font-weight: 600;
+
+  letter-spacing: -0.095em;
+
+  line-height: 0.82;
+
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  font-kerning: normal;
+
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  transform: none !important;
+
+  user-select: none;
 }
 
-/* ==========================================
-   OFF WHITE LAYER
-========================================== */
+/* =====================================================
+   ASCENT
+===================================================== */
 
-.home-transition__white {
-  z-index: 2;
-  background: #dce5ef;
-  transform: translate3d(100%, 0, 0);
+.home-transition__word:nth-of-type(1) {
+  font-size: clamp(90px, 14vw, 200px);
+  font-weight: 500;
+  letter-spacing: -0.085em;
 }
 
-/* ==========================================
-   ACCESSIBILITY
-========================================== */
+/* =====================================================
+   LONG
+===================================================== */
+
+.home-transition__word:nth-of-type(2) {
+  font-size: clamp(105px, 16vw, 230px);
+  font-weight: 700;
+  letter-spacing: -0.105em;
+}
+
+/* =====================================================
+   EXPOSURE
+===================================================== */
+
+.home-transition__word:nth-of-type(3) {
+  font-size: clamp(75px, 11vw, 165px);
+  font-weight: 500;
+  letter-spacing: -0.075em;
+}
+
+/* =====================================================
+   DECORATIVE LINE
+===================================================== */
+
+.home-transition__rule {
+  position: relative;
+  z-index: 3;
+
+  display: block;
+
+  width: clamp(50px, 7vw, 100px);
+  height: 1px;
+
+  margin-top: clamp(12px, 2vh, 24px);
+
+  background-color: #b9d6f6;
+
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =====================================================
+   LARGE DESKTOP
+===================================================== */
+
+@media (min-width: 1440px) {
+  .home-transition__word:nth-of-type(1) {
+    font-size: clamp(150px, 13vw, 220px);
+  }
+
+  .home-transition__word:nth-of-type(2) {
+    font-size: clamp(170px, 15vw, 250px);
+  }
+
+  .home-transition__word:nth-of-type(3) {
+    font-size: clamp(120px, 11vw, 185px);
+  }
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1024px) {
+  .home-transition__content {
+    gap: 10px;
+  }
+
+  .home-transition__word:nth-of-type(1) {
+    font-size: 14vw;
+  }
+
+  .home-transition__word:nth-of-type(2) {
+    font-size: 16vw;
+  }
+
+  .home-transition__word:nth-of-type(3) {
+    font-size: 11vw;
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+  .home-transition__content {
+    gap: 10px;
+    padding: 16px;
+
+    transform: translateY(-20px);
+  }
+
+  .home-transition__word {
+    max-width: 96vw;
+    letter-spacing: -0.065em;
+  }
+
+  .home-transition__word:nth-of-type(1) {
+    font-size: 17vw;
+  }
+
+  .home-transition__word:nth-of-type(2) {
+    font-size: 19vw;
+  }
+
+  .home-transition__word:nth-of-type(3) {
+    font-size: 13vw;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 380px) {
+  .home-transition__word:nth-of-type(1) {
+    font-size: 16vw;
+  }
+
+  .home-transition__word:nth-of-type(2) {
+    font-size: 18vw;
+  }
+
+  .home-transition__word:nth-of-type(3) {
+    font-size: 12vw;
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .home-transition {
     transition: none !important;
+    animation: none !important;
   }
 }

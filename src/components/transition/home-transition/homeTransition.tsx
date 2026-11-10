@@ -8,17 +8,28 @@ const HOME_PATH = "/";
 
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
-function HomeTransition() {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const blackRef = useRef<HTMLDivElement>(null);
-  const whiteRef = useRef<HTMLDivElement>(null);
+type HomeTransitionProps = {
+  currentPath: string;
+  onNavigate: (path: string) => void;
+};
+
+function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
+  const currentPathRef = useRef(normalizePath(currentPath));
+  const onNavigateRef = useRef(onNavigate);
+
+  currentPathRef.current = normalizePath(currentPath);
+  onNavigateRef.current = onNavigate;
 
   useLayoutEffect(() => {
-    const overlay = overlayRef.current;
-    const black = blackRef.current;
-    const white = whiteRef.current;
+    const overlay = document.querySelector<HTMLElement>(".home-transition");
 
-    if (!overlay || !black || !white) return;
+    if (!overlay) return;
+
+    const content = overlay.querySelector<HTMLElement>(
+      ".home-transition__content",
+    );
+
+    if (!content) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -27,22 +38,23 @@ function HomeTransition() {
     let timeline: gsap.core.Timeline | null = null;
     let navigating = false;
 
-    const reset = () => {
+    // Reset overlay to its hidden starting position.
+    const resetTransition = () => {
       gsap.set(overlay, {
         autoAlpha: 0,
+        clipPath: "inset(0 100% 0 0)",
         pointerEvents: "none",
       });
 
-      gsap.set([black, white], {
-        xPercent: 100,
+      gsap.set(content, {
+        autoAlpha: 1,
+        y: 0,
       });
-
-      timeline = null;
-      navigating = false;
     };
 
-    reset();
+    resetTransition();
 
+    // Navigate to homepage while the overlay covers the screen.
     const navigateHome = (destination: URL) => {
       window.history.pushState(
         {},
@@ -51,10 +63,19 @@ function HomeTransition() {
       );
 
       flushSync(() => {
+        onNavigateRef.current(HOME_PATH);
         window.dispatchEvent(new PopStateEvent("popstate"));
       });
     };
 
+    // Finish and clean up the transition.
+    const finishTransition = () => {
+      resetTransition();
+      timeline = null;
+      navigating = false;
+    };
+
+    // Intercept links returning to homepage.
     const handleClick = (event: MouseEvent) => {
       if (
         event.defaultPrevented ||
@@ -89,12 +110,12 @@ function HomeTransition() {
         return;
       }
 
-      const currentPath = normalizePath(window.location.pathname);
-
       const destinationPath = normalizePath(destination.pathname);
 
-      // Only internal page -> homepage.
-      if (currentPath === HOME_PATH || destinationPath !== HOME_PATH) {
+      const activePath = currentPathRef.current;
+
+      // Only animate when returning to homepage.
+      if (destinationPath !== HOME_PATH || activePath === HOME_PATH) {
         return;
       }
 
@@ -108,60 +129,58 @@ function HomeTransition() {
 
       timeline?.kill();
 
+      // Reduced-motion fallback.
       if (reducedMotion) {
         navigateHome(destination);
-        reset();
+        finishTransition();
         return;
       }
 
+      // Prepare overlay.
       gsap.set(overlay, {
         autoAlpha: 1,
+        clipPath: "inset(0 100% 0 0)",
         pointerEvents: "auto",
       });
 
-      gsap.set(black, { xPercent: 100 });
-      gsap.set(white, { xPercent: 100 });
+      // Ensure typography is visible before the wipe starts.
+      gsap.set(content, {
+        autoAlpha: 1,
+        y: 0,
+      });
 
+      // Page wipe animation. Typography remains static.
       timeline = gsap.timeline({
-        onComplete: reset,
+        onComplete: finishTransition,
       });
 
       timeline
-
-        // 01. FULL BLACK SCREEN ENTERS
-        .to(black, {
-          xPercent: 0,
-          duration: 0.9,
+        // 1. Cover current page.
+        .to(overlay, {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 1.35,
           ease: "power4.inOut",
         })
 
-        // 02. NAVIGATE UNDER THE BLACK SCREEN
+        // 2. Change route while covered.
         .add(() => {
           navigateHome(destination);
         })
 
-        // 03. FULL WHITE SCREEN ENTERS
+        // 3. Hold the static typography.
         .to(
-          white,
+          {},
           {
-            xPercent: 0,
-            duration: 0.85,
-            ease: "power4.inOut",
+            duration: 0.8,
           },
-          "-=0.15",
         )
 
-        // 04. BOTH FULL-SCREEN LAYERS EXIT
-        .to(
-          [black, white],
-          {
-            xPercent: -100,
-            duration: 1,
-            stagger: 0.12,
-            ease: "power4.inOut",
-          },
-          "+=0.08",
-        );
+        // 4. Reveal homepage.
+        .to(overlay, {
+          clipPath: "inset(0 0 0 100%)",
+          duration: 1.45,
+          ease: "power4.inOut",
+        });
     };
 
     document.addEventListener("click", handleClick);
@@ -171,15 +190,18 @@ function HomeTransition() {
 
       timeline?.kill();
 
-      gsap.killTweensOf([overlay, black, white]);
+      gsap.killTweensOf(overlay);
+      gsap.killTweensOf(content);
     };
   }, []);
 
   return (
-    <div ref={overlayRef} className="home-transition" aria-hidden="true">
-      <div ref={blackRef} className="home-transition__black" />
-
-      <div ref={whiteRef} className="home-transition__white" />
+    <div className="home-transition" aria-hidden="true">
+      <div className="home-transition__content">
+        <span className="home-transition__word">ASCENT</span>
+        <span className="home-transition__word">LONG</span>
+        <span className="home-transition__word">EXPOSURE</span>
+      </div>
     </div>
   );
 }
