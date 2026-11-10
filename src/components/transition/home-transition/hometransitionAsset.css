@@ -3,7 +3,13 @@
    STATIC TYPOGRAPHY / CINEMATIC PAGE WIPE
 ===================================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@font-face {
+  font-family: "Druk Wide";
+  src: url("/fonts/DrukWideBold.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* =====================================================
    RESET
@@ -94,7 +100,7 @@
   color: #202e64 !important;
   -webkit-text-fill-color: #202e64 !important;
 
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Druk Wide", sans-serif;
 
   font-size: clamp(85px, 13vw, 190px);
 
@@ -152,26 +158,20 @@
 }
 
 /* =====================================================
-   DECORATIVE LINE
+   ACCENT DOT
 ===================================================== */
 
-.home-transition__rule {
-  position: relative;
-  z-index: 3;
+.home-transition__dot {
+  display: inline-block;
 
-  display: block;
+  color: #ea3d08 !important;
+  -webkit-text-fill-color: #ea3d08 !important;
 
-  width: clamp(50px, 7vw, 100px);
-  height: 1px;
+  margin-left: 0.08em;
 
-  margin-top: clamp(12px, 2vh, 24px);
-
-  background-color: #b9d6f6;
-
-  opacity: 1;
-  visibility: visible;
+  font-family: "Druk Wide", sans-serif;
+  font-weight: 400;
 }
-
 /* =====================================================
    LARGE DESKTOP
 ===================================================== */

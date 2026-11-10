@@ -171,7 +171,7 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
         .to(
           {},
           {
-            duration: 0.8,
+            duration: 0.1,
           },
         )
 
@@ -199,8 +199,12 @@ function HomeTransition({ currentPath, onNavigate }: HomeTransitionProps) {
     <div className="home-transition" aria-hidden="true">
       <div className="home-transition__content">
         <span className="home-transition__word">ASCENT</span>
+
         <span className="home-transition__word">LONG</span>
-        <span className="home-transition__word">EXPOSURE</span>
+
+        <span className="home-transition__word">
+          EXPOSURE<span className="home-transition__dot">.</span>
+        </span>
       </div>
     </div>
   );
