@@ -53,7 +53,7 @@
 }
 
 /* ==========================================
-   P1 NAVIGATION — ENLARGED
+   NAVIGATION
 ========================================== */
 
 .aperture-p1__header {
@@ -65,7 +65,7 @@
   align-items: center;
 
   width: 100%;
-  padding: 2.2rem 3%;
+  padding: 2rem 2.1%;
 }
 
 .aperture-p1__navigation {
@@ -97,7 +97,7 @@
 
 .aperture-p1__nav a {
   color: #111;
-  font-size: 1.05rem;
+  font-size: 0.78rem;
   font-weight: 450;
   text-decoration: none;
   transition: opacity 0.3s ease;
@@ -109,42 +109,10 @@
 
 .aperture-p1__nav-center img {
   display: block;
-  width: 250px;
+  width: 190px;
   height: auto;
-  max-height: 48px;
+  max-height: 36px;
   object-fit: contain;
-}
-
-/* TABLET */
-@media (max-width: 768px) {
-  .aperture-p1__header {
-    padding: 1.6rem 5%;
-  }
-
-  .aperture-p1__nav a {
-    font-size: 0.9rem;
-  }
-
-  .aperture-p1__nav-center img {
-    width: 155px;
-    max-height: 36px;
-  }
-}
-
-/* MOBILE */
-@media (max-width: 480px) {
-  .aperture-p1__header {
-    padding: 1.3rem 5%;
-  }
-
-  .aperture-p1__nav a {
-    font-size: 0.8rem;
-  }
-
-  .aperture-p1__nav-center img {
-    width: 125px;
-    max-height: 32px;
-  }
 }
 
 /* ==========================================
@@ -165,7 +133,7 @@
 .aperture-p1__intro-label,
 .aperture-p1__intro-copy {
   position: absolute;
-  top: 15%;
+  top: 7.1%;
 
   margin: 0;
 
