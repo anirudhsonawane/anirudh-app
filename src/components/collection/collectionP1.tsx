@@ -8,16 +8,18 @@ import {
 import { gsap } from "gsap";
 import "./collectionP1page.css";
 
+type ImageOrigin = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  centerX: number;
+  centerY: number;
+};
+
 type CollectionState = {
   image: string;
-  origin: {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-    centerX: number;
-    centerY: number;
-  };
+  origin: ImageOrigin;
 };
 
 function CollectionP1() {
@@ -29,122 +31,89 @@ function CollectionP1() {
 
   const openRef = useRef(false);
   const closingRef = useRef(false);
-
   const openingTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const closingTimelineRef = useRef<gsap.core.Timeline | null>(null);
-  const marqueeRef = useRef<gsap.core.Tween | null>(null);
 
-  // --------------------------------------------------
-  // OPEN COLLECTION
-  // --------------------------------------------------
+  const getImageOrigin = useCallback((image: HTMLImageElement): ImageOrigin => {
+    const rect = image.getBoundingClientRect();
+    return {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      centerX: rect.left + rect.width / 2,
+      centerY: rect.top + rect.height / 2,
+    };
+  }, []);
 
+  // Open P1 from the existing By The Sea collection card.
   useEffect(() => {
     const handleCollectionClick = (event: MouseEvent) => {
-      if (event.defaultPrevented) return;
-
       if (
+        event.defaultPrevented ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
         event.shiftKey ||
         event.altKey
-      ) {
+      )
         return;
-      }
 
       const target = event.target;
-
       if (!(target instanceof Element)) return;
 
       const card = target.closest<HTMLElement>(".collection-panel.sea");
-
       if (!card || openRef.current) return;
 
       const image = card.querySelector<HTMLImageElement>(".panel-image img");
-
       if (!image) return;
 
-      const rect = image.getBoundingClientRect();
-
-      if (!rect.width || !rect.height) return;
+      const origin = getImageOrigin(image);
+      if (!origin.width || !origin.height) return;
 
       event.preventDefault();
-
       openRef.current = true;
       closingRef.current = false;
-
-      setCollection({
-        image: image.currentSrc || image.src,
-        origin: {
-          top: rect.top,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height,
-          centerX: rect.left + rect.width / 2,
-          centerY: rect.top + rect.height / 2,
-        },
-      });
+      setCollection({ image: image.currentSrc || image.src, origin });
     };
 
     document.addEventListener("click", handleCollectionClick);
+    return () => document.removeEventListener("click", handleCollectionClick);
+  }, [getImageOrigin]);
 
-    return () => {
-      document.removeEventListener("click", handleCollectionClick);
-    };
-  }, []);
-
-  // --------------------------------------------------
-  // OPENING ANIMATION
-  // --------------------------------------------------
-
+  // Aperture expansion, image travel and editorial content reveal.
   useLayoutEffect(() => {
     if (!collection || !rootRef.current) return;
 
     const root = rootRef.current;
     const aperture = apertureRef.current;
     const image = imageRef.current;
-
     if (!aperture || !image) return;
 
-    const previousBodyOverflow = document.body.style.overflow;
-
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const { origin } = collection;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const mobile = vw <= 768;
 
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const isMobile = viewportWidth <= 768;
-
-    const finalWidth = isMobile
-      ? Math.min(viewportWidth * 0.86, 480)
-      : Math.min(viewportWidth * 0.39, 540);
-
-    const finalHeight = isMobile
-      ? Math.min(viewportHeight * 0.34, 340)
-      : Math.min(viewportHeight * 0.57, 590);
-
-    const finalLeft = isMobile
-      ? (viewportWidth - finalWidth) / 2
-      : viewportWidth * 0.54;
-
-    const finalTop = isMobile
-      ? viewportHeight * 0.09
-      : (viewportHeight - finalHeight) / 2;
-
-    const apertureSize = Math.hypot(viewportWidth, viewportHeight) * 1.5;
-
+    // Matches the portrait placement in the supplied editorial reference.
+    const finalWidth = mobile
+      ? Math.min(vw * 0.86, 480)
+      : Math.min(vw * 0.31, 520);
+    const finalHeight = mobile
+      ? Math.min(vh * 0.37, 360)
+      : Math.min(vh * 0.74, 590);
+    const finalLeft = mobile ? (vw - finalWidth) / 2 : vw * 0.662;
+    const finalTop = mobile ? vh * 0.105 : vh * 0.153;
+    const apertureSize = Math.hypot(vw, vh) * 1.5;
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const context = gsap.context(() => {
-      gsap.set(root, {
-        visibility: "visible",
-        pointerEvents: "auto",
-      });
-
-      // Image starts at the clicked card.
+      gsap.set(root, { visibility: "visible", pointerEvents: "auto" });
       gsap.set(image, {
         position: "fixed",
         top: origin.top,
@@ -154,51 +123,25 @@ function CollectionP1() {
         opacity: 1,
         borderRadius: 0,
       });
-
-      // Aperture starts at the clicked image centre.
       gsap.set(aperture, {
         clipPath: `circle(0px at ${origin.centerX}px ${origin.centerY}px)`,
       });
 
-      // Initial navigation state.
-      gsap.set(".aperture-p1__nav", {
-        y: -15,
+      gsap.set(".aperture-p1__nav", { y: -12, opacity: 0 });
+      gsap.set(".aperture-p1__intro-label, .aperture-p1__intro-copy", {
+        y: 18,
         opacity: 0,
       });
+      gsap.set(".aperture-p1__title-line", { yPercent: 110 });
+      gsap.set(".aperture-p1__details", { y: 18, opacity: 0 });
+      gsap.set(".aperture-p1__image-index", { y: 12, opacity: 0 });
 
-      gsap.set(".aperture-p1__eyebrow", {
-        y: 20,
-        opacity: 0,
-      });
-
-      gsap.set(".aperture-p1__title-line", {
-        yPercent: 110,
-      });
-
-      gsap.set(".aperture-p1__description", {
-        y: 20,
-        opacity: 0,
-      });
-
-      gsap.set(".aperture-p1__meta", {
-        y: 15,
-        opacity: 0,
-      });
-
-      const timeline = gsap.timeline({
-        defaults: {
-          ease: "power3.out",
-        },
-      });
-
-      // 1. Expand the aperture.
+      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
       timeline.to(aperture, {
         clipPath: `circle(${apertureSize}px at ${origin.centerX}px ${origin.centerY}px)`,
-        duration: reducedMotion ? 0 : 1.25,
+        duration: reducedMotion ? 0 : 1.2,
         ease: "power4.inOut",
       });
-
-      // 2. Move the image into its editorial position.
       timeline.to(
         image,
         {
@@ -206,152 +149,105 @@ function CollectionP1() {
           left: finalLeft,
           width: finalWidth,
           height: finalHeight,
-          duration: reducedMotion ? 0 : 1.4,
+          duration: reducedMotion ? 0 : 1.35,
           ease: "power4.inOut",
         },
-        0.12,
+        0.1,
       );
-
-      // 3. Navigation reveal.
       timeline.to(
         ".aperture-p1__nav",
         {
           y: 0,
           opacity: 1,
-          duration: reducedMotion ? 0 : 0.7,
-          stagger: 0.1,
+          duration: reducedMotion ? 0 : 0.65,
+          stagger: 0.08,
         },
-        0.85,
+        0.78,
       );
-
-      // 4. Eyebrow reveal.
       timeline.to(
-        ".aperture-p1__eyebrow",
+        ".aperture-p1__intro-label, .aperture-p1__intro-copy",
         {
           y: 0,
           opacity: 1,
-          duration: reducedMotion ? 0 : 0.7,
+          duration: reducedMotion ? 0 : 0.65,
+          stagger: 0.1,
         },
-        1.1,
+        0.9,
       );
-
-      // 5. Title reveal.
       timeline.to(
         ".aperture-p1__title-line",
         {
           yPercent: 0,
-          duration: reducedMotion ? 0 : 1.05,
-          stagger: 0.13,
+          duration: reducedMotion ? 0 : 0.95,
+          stagger: 0.12,
           ease: "power4.out",
         },
-        1.15,
+        1.08,
       );
-
-      // 6. Description reveal.
       timeline.to(
-        ".aperture-p1__description",
+        ".aperture-p1__details",
         {
           y: 0,
           opacity: 1,
-          duration: reducedMotion ? 0 : 0.75,
+          duration: reducedMotion ? 0 : 0.65,
         },
-        1.55,
+        1.48,
       );
-
-      // 7. Footer reveal.
       timeline.to(
-        ".aperture-p1__meta",
+        ".aperture-p1__image-index",
         {
           y: 0,
           opacity: 1,
-          duration: reducedMotion ? 0 : 0.7,
-          stagger: 0.12,
+          duration: reducedMotion ? 0 : 0.55,
         },
-        1.75,
+        1.42,
       );
-
-      if (!reducedMotion) {
-        timeline.eventCallback("onComplete", () => {
-          marqueeRef.current = gsap.to(".aperture-p1__title-track", {
-            xPercent: -12,
-            duration: 16,
-            ease: "none",
-            repeat: -1,
-            yoyo: true,
-          });
-        });
-      }
 
       openingTimelineRef.current = timeline;
     }, root);
 
     return () => {
-      marqueeRef.current?.kill();
       openingTimelineRef.current?.kill();
-
       context.revert();
-
-      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overflow = previousOverflow;
     };
   }, [collection]);
 
-  // --------------------------------------------------
-  // CLOSE P1 WHEN THE HOME TRANSITION STARTS
-  // --------------------------------------------------
-
+  // Close the overlay when the homepage transition takes control.
   useEffect(() => {
     const handleCloseFromHome = () => {
-      marqueeRef.current?.kill();
       openingTimelineRef.current?.kill();
       closingTimelineRef.current?.kill();
-
       openRef.current = false;
       closingRef.current = false;
-
       setCollection(null);
     };
 
     window.addEventListener("ascent:close-collection", handleCloseFromHome);
-
-    return () => {
+    return () =>
       window.removeEventListener(
         "ascent:close-collection",
         handleCloseFromHome,
       );
-    };
   }, []);
 
-  // --------------------------------------------------
-  // ROUTE NAVIGATION HANDOFF
-  // --------------------------------------------------
-
+  // Hand off cleanly to the About and Contact routes.
   useEffect(() => {
     const handleRouteChange = () => {
       const path = window.location.pathname.replace(/\/+$/, "") || "/";
-
       if (path !== "/about" && path !== "/contact") return;
-
-      marqueeRef.current?.kill();
       openingTimelineRef.current?.kill();
       closingTimelineRef.current?.kill();
-
       openRef.current = false;
       closingRef.current = false;
-
       setCollection(null);
     };
 
     window.addEventListener("popstate", handleRouteChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
+    return () => window.removeEventListener("popstate", handleRouteChange);
   }, []);
 
-  // --------------------------------------------------
-  // SMOOTH RETURN TO COLLECTION GRID
-  // --------------------------------------------------
-
+  // Reverse the hero image back into its original collection card.
   const closeCollection = useCallback(() => {
     if (
       !collection ||
@@ -359,31 +255,22 @@ function CollectionP1() {
       !apertureRef.current ||
       !imageRef.current ||
       closingRef.current
-    ) {
+    )
       return;
-    }
 
     closingRef.current = true;
-
-    marqueeRef.current?.kill();
     openingTimelineRef.current?.kill();
 
     const root = rootRef.current;
     const aperture = apertureRef.current;
     const image = imageRef.current;
-
-    // Use the current card position if available.
-    const originalCard = document.querySelector<HTMLElement>(
-      ".collection-panel.sea",
-    );
-
-    const originalImage =
-      originalCard?.querySelector<HTMLImageElement>(".panel-image img");
-
+    const originalImage = document
+      .querySelector<HTMLElement>(".collection-panel.sea")
+      ?.querySelector<HTMLImageElement>(".panel-image img");
     const liveRect = originalImage?.getBoundingClientRect();
 
-    const origin =
-      liveRect && liveRect.width && liveRect.height
+    const origin: ImageOrigin =
+      liveRect?.width && liveRect.height
         ? {
             top: liveRect.top,
             left: liveRect.left,
@@ -397,29 +284,19 @@ function CollectionP1() {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
     const duration = reducedMotion ? 0 : 0.95;
-
-    // Prevent another interaction while the reverse animation runs.
-    gsap.set(root, {
-      pointerEvents: "none",
-    });
+    gsap.set(root, { pointerEvents: "none" });
 
     const timeline = gsap.timeline({
-      defaults: {
-        ease: "power3.inOut",
-      },
+      defaults: { ease: "power3.inOut" },
       onComplete: () => {
         openRef.current = false;
         closingRef.current = false;
-
         setCollection(null);
       },
     });
-
     closingTimelineRef.current = timeline;
 
-    // Image travels back to the collection card.
     timeline.to(
       image,
       {
@@ -432,8 +309,6 @@ function CollectionP1() {
       },
       0,
     );
-
-    // Aperture contracts around the original card position.
     timeline.to(
       aperture,
       {
@@ -443,94 +318,38 @@ function CollectionP1() {
       },
       0,
     );
-
-    // Navigation fades and lifts away.
     timeline.to(
-      ".aperture-p1__nav",
+      ".aperture-p1__nav, .aperture-p1__intro-label, .aperture-p1__intro-copy, .aperture-p1__details, .aperture-p1__image-index",
       {
         y: -12,
         opacity: 0,
-        duration: reducedMotion ? 0 : 0.35,
-        stagger: 0.035,
+        duration: reducedMotion ? 0 : 0.32,
+        stagger: 0.025,
         ease: "power2.in",
       },
       0,
     );
-
-    // Collection label.
-    timeline.to(
-      ".aperture-p1__eyebrow",
-      {
-        y: -12,
-        opacity: 0,
-        duration: reducedMotion ? 0 : 0.3,
-        ease: "power2.in",
-      },
-      0,
-    );
-
-    // Title moves down while fading out.
     timeline.to(
       ".aperture-p1__title-line",
       {
         yPercent: 35,
         opacity: 0,
-        duration: reducedMotion ? 0 : 0.42,
-        stagger: 0.035,
-        ease: "power2.in",
-      },
-      0,
-    );
-
-    // Description.
-    timeline.to(
-      ".aperture-p1__description",
-      {
-        y: 18,
-        opacity: 0,
-        duration: reducedMotion ? 0 : 0.32,
-        ease: "power2.in",
-      },
-      0,
-    );
-
-    // Footer.
-    timeline.to(
-      ".aperture-p1__meta",
-      {
-        y: 12,
-        opacity: 0,
-        duration: reducedMotion ? 0 : 0.3,
-        stagger: 0.025,
+        duration: reducedMotion ? 0 : 0.4,
+        stagger: 0.03,
         ease: "power2.in",
       },
       0,
     );
   }, [collection]);
 
-  // --------------------------------------------------
-  // ESCAPE KEY
-  // --------------------------------------------------
-
   useEffect(() => {
     if (!collection) return;
-
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeCollection();
-      }
+      if (event.key === "Escape") closeCollection();
     };
-
     window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [collection, closeCollection]);
-
-  // --------------------------------------------------
-  // RENDER
-  // --------------------------------------------------
 
   if (!collection) return null;
 
@@ -538,81 +357,92 @@ function CollectionP1() {
     <div
       className="aperture-p1"
       ref={rootRef}
-      aria-label="By The Sea collection"
+      aria-label="Ingrid Solberg collection"
     >
-      {/* APERTURE BACKGROUND */}
       <div className="aperture-p1__background" ref={apertureRef} />
 
-      {/* NAVIGATION */}
       <header className="aperture-p1__header">
-        <nav className="aperture-p1__navigation">
+        <nav className="aperture-p1__navigation" aria-label="Main navigation">
           <div className="aperture-p1__nav aperture-p1__nav-left">
             <a href="/about">About</a>
           </div>
-
           <div className="aperture-p1__nav aperture-p1__nav-center">
             <a href="/" aria-label="Realevate home">
               <img src="/Ascent™ Black Geometric Logo.png" alt="Realevate" />
             </a>
           </div>
-
           <div className="aperture-p1__nav aperture-p1__nav-right">
             <a href="/contact">Contact</a>
           </div>
         </nav>
       </header>
 
-      {/* EDITORIAL CONTENT */}
       <main className="aperture-p1__content">
-        <div className="aperture-p1__copy">
-          <div className="aperture-p1__eyebrow"></div>
+        <div className="aperture-p1__intro-label">(Intro)</div>
+        <p className="aperture-p1__intro-copy">
+          I’m a brand and art director in Oslo. I build identities
+          <br className="desktop-break" />
+          for studios and makers, and I teach what I learn
+          <br className="desktop-break" />
+          along the way.
+        </p>
 
+        <section
+          className="aperture-p1__identity"
+          aria-label="Profile introduction"
+        >
           <div className="aperture-p1__title">
             <div className="aperture-p1__title-mask">
-              <div className="aperture-p1__title-line">BY THE</div>
+              <div className="aperture-p1__title-line">Ingrid</div>
             </div>
-
             <div className="aperture-p1__title-mask">
               <div className="aperture-p1__title-line">
-                SEA <span>.</span>
+                Solberg<span>©</span>
               </div>
             </div>
           </div>
 
-          <div className="aperture-p1__description">
-            <p>
-              A collection shaped by the rhythm
-              <br />
-              of the coast and the art of living well.
-            </p>
+          <div className="aperture-p1__details">
+            <div className="aperture-p1__detail-column">
+              <span className="aperture-p1__detail-label">Services</span>
+              <p>
+                Brand identity
+                <br />
+                Art direction
+                <br />
+                Packaging
+                <br />
+                Workshops
+              </p>
+            </div>
+            <div className="aperture-p1__detail-column">
+              <span className="aperture-p1__detail-label">Based in</span>
+              <p>Oslo, Norway</p>
+            </div>
+            <div className="aperture-p1__detail-column aperture-p1__availability">
+              <span className="aperture-p1__detail-label">Availability</span>
+              <p>
+                <i />
+                Projects from November
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* PROPERTY IMAGE */}
         <div className="aperture-p1__image" ref={imageRef}>
-          <img src={collection.image} alt="By The Sea coastal property" />
-
-          <div className="aperture-p1__image-caption">
-            <span>01 / 04</span>
-            <span>COASTAL LIVING</span>
-          </div>
+          <img
+            src={collection.image}
+            alt="Portrait for the Ingrid Solberg profile"
+          />
         </div>
+        <div className="aperture-p1__image-index">/26</div>
       </main>
 
-      {/* FOOTER */}
       <footer className="aperture-p1__footer">
-        <div className="aperture-p1__meta">
-          <span>SCROLL TO DISCOVER</span>
-        </div>
-
-        <div className="aperture-p1__meta aperture-p1__footer-right">
-          <span>CURATED PROPERTIES</span>
-
-          <button type="button" onClick={closeCollection}>
-            BACK TO COLLECTIONS
-            <span>↗</span>
-          </button>
-        </div>
+        <span>INDEPENDENT CREATIVE PRACTICE</span>
+        <button type="button" onClick={closeCollection}>
+          BACK TO COLLECTIONS <span>↗</span>
+        </button>
       </footer>
     </div>
   );

@@ -1,30 +1,40 @@
 /* ==========================================
-   THE APERTURE — BY THE SEA
+   COLLECTION P1 — EDITORIAL PROFILE
+   Smooth circular opening transition
+========================================== */
+
+/* ==========================================
+   MAIN P1 OVERLAY
 ========================================== */
 
 .aperture-p1 {
   position: fixed;
   inset: 0;
   z-index: 99998;
-
   width: 100%;
   height: 100vh;
   height: 100svh;
-
   overflow: hidden;
   isolation: isolate;
 
+  /* IMPORTANT:
+     Keep the overlay transparent.
+     The white background is revealed through
+     the animated circular background below.
+  */
   background: transparent;
-  color: #fff;
 
-  font-family: "Google Sans Flex", sans-serif;
+  color: #111;
+  font-family: "Google Sans Flex", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 
-  will-change: clip-path;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* ==========================================
-   APERTURE BACKGROUND
+   ANIMATED WHITE CIRCULAR BACKGROUND
 ========================================== */
 
 .aperture-p1__background {
@@ -32,41 +42,41 @@
   inset: 0;
   z-index: 0;
 
-  background: #202744;
+  background: #fff;
 
+  /* Starts from the clicked collection image.
+     GSAP controls the circle expansion.
+  */
   clip-path: circle(0px at 50% 50%);
+
   will-change: clip-path;
 }
 
 /* ==========================================
-   NAVIGATION — HOMEPAGE DIMENSIONS
+   P1 NAVIGATION — ENLARGED
 ========================================== */
 
 .aperture-p1__header {
   position: absolute;
-  top: 0;
-  left: 0;
-
+  inset: 0 0 auto;
   z-index: 20;
 
   display: flex;
   align-items: center;
 
   width: 100%;
-  padding: 3rem;
+  padding: 2.2rem 3%;
 }
 
 .aperture-p1__navigation {
   display: flex;
   align-items: center;
-
   width: 100%;
 }
 
 .aperture-p1__nav {
   display: flex;
   align-items: center;
-
   flex: 1;
 
   opacity: 0;
@@ -86,104 +96,117 @@
 }
 
 .aperture-p1__nav a {
-  color: #fff;
-
-  font-size: 1.1rem;
-  font-weight: 500;
-
+  color: #111;
+  font-size: 1.05rem;
+  font-weight: 450;
   text-decoration: none;
-
   transition: opacity 0.3s ease;
 }
 
 .aperture-p1__nav a:hover {
-  opacity: 0.55;
+  opacity: 0.45;
 }
 
 .aperture-p1__nav-center img {
   display: block;
-
-  width: 300px;
+  width: 250px;
   height: auto;
-  max-height: 50px;
-
+  max-height: 48px;
   object-fit: contain;
+}
 
-  filter: brightness(0) invert(1);
+/* TABLET */
+@media (max-width: 768px) {
+  .aperture-p1__header {
+    padding: 1.6rem 5%;
+  }
+
+  .aperture-p1__nav a {
+    font-size: 0.9rem;
+  }
+
+  .aperture-p1__nav-center img {
+    width: 155px;
+    max-height: 36px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .aperture-p1__header {
+    padding: 1.3rem 5%;
+  }
+
+  .aperture-p1__nav a {
+    font-size: 0.8rem;
+  }
+
+  .aperture-p1__nav-center img {
+    width: 125px;
+    max-height: 32px;
+  }
 }
 
 /* ==========================================
-   CONTENT LAYOUT
+   MAIN CONTENT
 ========================================== */
 
 .aperture-p1__content {
   position: absolute;
   inset: 0;
-
   z-index: 3;
-
   pointer-events: none;
 }
 
-.aperture-p1__copy {
+/* ==========================================
+   INTRODUCTION
+========================================== */
+
+.aperture-p1__intro-label,
+.aperture-p1__intro-copy {
   position: absolute;
+  top: 15%;
 
-  left: 8%;
-  top: 50%;
+  margin: 0;
 
-  width: 45%;
+  color: #171717;
+  font-size: clamp(0.65rem, 0.88vw, 0.82rem);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.035em;
 
-  transform: translateY(-42%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.aperture-p1__intro-label {
+  left: 2.1%;
+  color: #777;
+}
+
+.aperture-p1__intro-copy {
+  left: 18.1%;
+  width: 39%;
+
+  font-size: clamp(0.8rem, 1.42vw, 1.12rem);
+  line-height: 1.42;
+  letter-spacing: -0.045em;
+}
+
+/* ==========================================
+   PROFILE IDENTITY
+========================================== */
+
+.aperture-p1__identity {
+  position: absolute;
+  left: 2.1%;
+  top: 27.3%;
+  width: 56%;
 
   pointer-events: auto;
 }
 
-/* ==========================================
-   EYEBROW
-========================================== */
-
-.aperture-p1__eyebrow {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 2.4rem;
-
-  opacity: 0;
-
-  will-change: transform, opacity;
-}
-
-.aperture-p1__eyebrow > span {
-  display: block;
-
-  width: 23px;
-  height: 1px;
-
-  flex-shrink: 0;
-
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.aperture-p1__eyebrow p {
-  margin: 0;
-
-  color: rgba(255, 255, 255, 0.72);
-
-  font-size: 0.55rem;
-  font-weight: 400;
-
-  letter-spacing: 0.17em;
-}
-
-/* ==========================================
-   MAIN TYPOGRAPHY
-========================================== */
-
 .aperture-p1__title {
-  position: relative;
-
   width: max-content;
   max-width: 100%;
 }
@@ -193,104 +216,99 @@
 }
 
 .aperture-p1__title-line {
-  color: #fff;
+  color: #080808;
 
-  font-size: clamp(4.5rem, 9.5vw, 10rem);
-
-  font-weight: 450;
-
-  line-height: 0.82;
-
-  letter-spacing: -0.095em;
-
+  font-size: clamp(5.4rem, 14.1vw, 12.7rem);
+  font-weight: 570;
+  line-height: 0.79;
+  letter-spacing: -0.105em;
   white-space: nowrap;
 
   will-change: transform, opacity;
 }
 
 .aperture-p1__title-line span {
-  color: #9eaccb;
+  display: inline-block;
+  margin-left: 0.09em;
+
+  font-size: 0.34em;
+  font-weight: 450;
+  letter-spacing: -0.08em;
+  vertical-align: top;
+
+  transform: translateY(0.08em);
 }
 
 /* ==========================================
-   DESCRIPTION
+   PROFILE DETAILS
 ========================================== */
 
-.aperture-p1__description {
-  margin-top: 2.5rem;
+.aperture-p1__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.35fr;
+
+  column-gap: clamp(1.2rem, 4.2vw, 4.8rem);
+
+  width: min(100%, 610px);
+  margin-top: clamp(2rem, 5.1vh, 3.5rem);
 
   opacity: 0;
-
   will-change: transform, opacity;
 }
 
-.aperture-p1__description p {
+.aperture-p1__detail-column {
+  min-width: 0;
+}
+
+.aperture-p1__detail-label {
+  display: block;
+  margin-bottom: 0.35rem;
+
+  color: #888;
+  font-size: clamp(0.58rem, 0.72vw, 0.7rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.aperture-p1__detail-column p {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.78);
-
-  font-size: 0.83rem;
+  color: #171717;
+  font-size: clamp(0.63rem, 0.82vw, 0.78rem);
   font-weight: 400;
-
-  line-height: 1.8;
-
-  letter-spacing: 0.005em;
+  line-height: 1.48;
+  letter-spacing: -0.025em;
 }
 
-/* ==========================================
-   EXPLORE COLLECTION
-========================================== */
-
-.aperture-p1__back {
-  display: inline-flex;
+.aperture-p1__availability p {
+  display: flex;
   align-items: center;
+  gap: 0.48rem;
 
-  gap: 25px;
-
-  margin-top: 2rem;
-  padding: 0 0 10px;
-
-  border: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
-
-  background: transparent;
-  color: #fff;
-
-  font-family: inherit;
-
-  font-size: 0.58rem;
-  font-weight: 450;
-
-  letter-spacing: 0.12em;
-
-  cursor: pointer;
-
-  transition:
-    gap 0.35s ease,
-    border-color 0.35s ease;
+  white-space: nowrap;
 }
 
-.aperture-p1__back:hover {
-  gap: 38px;
-  border-color: #fff;
-}
+.aperture-p1__availability i {
+  display: inline-block;
+  flex: 0 0 5px;
 
-.aperture-p1__back-arrow {
-  font-size: 1rem;
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+  background: #c65b42;
 }
 
 /* ==========================================
-   PROPERTY IMAGE
+   HERO IMAGE
 ========================================== */
 
 .aperture-p1__image {
   position: fixed;
-
   z-index: 5;
 
   overflow: hidden;
-
-  background: #192039;
+  background: #e8e4df;
 
   will-change: top, left, width, height;
 }
@@ -308,32 +326,24 @@
 }
 
 .aperture-p1__image:hover img {
-  transform: scale(1.035);
+  transform: scale(1.025);
 }
 
 /* ==========================================
-   IMAGE CAPTION
+   IMAGE INDEX
 ========================================== */
 
-.aperture-p1__image-caption {
+.aperture-p1__image-index {
   position: absolute;
+  top: 11.6%;
+  left: 66.2%;
 
-  left: 0;
-  bottom: 0;
+  color: #777;
+  font-size: clamp(0.62rem, 0.78vw, 0.75rem);
+  line-height: 1;
 
-  display: flex;
-  justify-content: space-between;
-
-  width: 100%;
-
-  padding: 13px 15px;
-
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
-
-  color: #fff;
-
-  font-size: 0.48rem;
-  letter-spacing: 0.1em;
+  opacity: 0;
+  will-change: transform, opacity;
 }
 
 /* ==========================================
@@ -342,10 +352,8 @@
 
 .aperture-p1__footer {
   position: absolute;
-
   left: 0;
   bottom: 0;
-
   z-index: 20;
 
   display: flex;
@@ -353,79 +361,68 @@
   justify-content: space-between;
 
   width: 100%;
+  padding: 1.35rem 2.1%;
 
-  padding: 1.8rem 3.5rem;
+  color: #777;
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
 
   pointer-events: auto;
 }
 
-.aperture-p1__meta {
-  display: flex;
+.aperture-p1__footer button {
+  display: inline-flex;
   align-items: center;
-
-  color: rgba(255, 255, 255, 0.7);
-
-  font-size: 0.53rem;
-  font-weight: 400;
-
-  letter-spacing: 0.12em;
-
-  opacity: 0;
-
-  will-change: transform, opacity;
-}
-
-.aperture-p1__footer-right {
-  gap: 35px;
-}
-
-.aperture-p1__footer-right button {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
+  gap: 0.7rem;
 
   padding: 0;
-
   border: 0;
+
   background: transparent;
+  color: #171717;
 
-  color: #fff;
-
-  font-family: inherit;
-  font-size: 0.53rem;
-
-  letter-spacing: 0.1em;
+  font: inherit;
+  letter-spacing: inherit;
 
   cursor: pointer;
 
-  transition: opacity 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    gap 0.3s ease;
 }
 
-.aperture-p1__footer-right button:hover {
+.aperture-p1__footer button:hover {
+  gap: 1rem;
   opacity: 0.55;
 }
 
-.aperture-p1__footer-right button span {
+.aperture-p1__footer button span {
   font-size: 0.9rem;
 }
 
 /* ==========================================
-   LAPTOP
+   LAPTOP AND COMPACT DESKTOP
 ========================================== */
 
 @media (max-width: 1100px) {
-  .aperture-p1__copy {
-    left: 6%;
-    width: 47%;
+  .aperture-p1__identity {
+    top: 30%;
+    width: 59%;
   }
 
   .aperture-p1__title-line {
-    font-size: clamp(4rem, 9vw, 7rem);
+    font-size: clamp(5rem, 13.8vw, 9.5rem);
   }
 
-  .aperture-p1__footer {
-    padding: 1.5rem 2.5rem;
+  .aperture-p1__details {
+    width: 94%;
+    column-gap: 1.5rem;
+  }
+
+  .aperture-p1__intro-copy {
+    left: 19%;
+    width: 42%;
   }
 }
 
@@ -435,45 +432,72 @@
 
 @media (max-width: 768px) {
   .aperture-p1__header {
-    padding: 2rem;
+    padding: 1.35rem 5%;
   }
 
   .aperture-p1__nav a {
-    font-size: 0.95rem;
+    font-size: 0.78rem;
   }
 
   .aperture-p1__nav-center img {
     width: 125px;
-    max-height: 56px;
+    max-height: 30px;
   }
 
-  .aperture-p1__copy {
+  .aperture-p1__intro-label,
+  .aperture-p1__intro-copy {
+    top: 8.5%;
+  }
+
+  .aperture-p1__intro-label {
+    left: 5%;
+  }
+
+  .aperture-p1__intro-copy {
+    left: 24%;
+    width: 70%;
+
+    font-size: clamp(0.76rem, 2.2vw, 0.95rem);
+  }
+
+  .desktop-break {
+    display: none;
+  }
+
+  .aperture-p1__image-index {
+    top: 17%;
     left: 7%;
-    top: 72%;
+  }
 
-    width: 86%;
-
-    transform: translateY(-50%);
+  .aperture-p1__identity {
+    left: 5%;
+    top: 56%;
+    width: 90%;
   }
 
   .aperture-p1__title-line {
-    font-size: clamp(4rem, 13vw, 7rem);
+    font-size: clamp(4.7rem, 15vw, 7.5rem);
   }
 
-  .aperture-p1__eyebrow {
-    margin-bottom: 1.4rem;
-  }
+  .aperture-p1__details {
+    width: 100%;
 
-  .aperture-p1__description {
+    grid-template-columns: 1fr 1fr 1.25fr;
+    column-gap: 1rem;
+
     margin-top: 1.5rem;
   }
 
-  .aperture-p1__footer {
-    padding: 1.2rem 1.8rem;
+  .aperture-p1__detail-column p {
+    font-size: 0.67rem;
   }
 
-  .aperture-p1__footer-right {
-    gap: 15px;
+  .aperture-p1__detail-label {
+    font-size: 0.6rem;
+  }
+
+  .aperture-p1__footer {
+    padding: 1rem 5%;
   }
 }
 
@@ -483,75 +507,87 @@
 
 @media (max-width: 480px) {
   .aperture-p1__header {
-    padding: 1.5rem;
+    padding: 1.15rem 5%;
   }
 
   .aperture-p1__nav a {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   .aperture-p1__nav-center img {
     width: 105px;
-    max-height: 48px;
+    max-height: 26px;
   }
 
-  .aperture-p1__copy {
+  .aperture-p1__intro-label,
+  .aperture-p1__intro-copy {
+    top: 8%;
+  }
+
+  .aperture-p1__intro-label {
+    font-size: 0.58rem;
+  }
+
+  .aperture-p1__intro-copy {
+    left: 25%;
+    width: 70%;
+
+    font-size: 0.73rem;
+    line-height: 1.45;
+  }
+
+  .aperture-p1__image-index {
+    top: 15.8%;
     left: 7%;
-    top: 70%;
 
-    width: 88%;
+    font-size: 0.62rem;
   }
 
-  .aperture-p1__eyebrow {
-    gap: 8px;
-    margin-bottom: 1.2rem;
-  }
-
-  .aperture-p1__eyebrow p {
-    font-size: 0.44rem;
-    letter-spacing: 0.12em;
+  .aperture-p1__identity {
+    top: 55%;
   }
 
   .aperture-p1__title-line {
-    font-size: clamp(3.6rem, 15vw, 5.5rem);
+    font-size: clamp(4rem, 17vw, 5.6rem);
+    letter-spacing: -0.105em;
   }
 
-  .aperture-p1__description {
-    margin-top: 1.3rem;
+  .aperture-p1__details {
+    grid-template-columns: 1fr 0.9fr;
+    row-gap: 1rem;
+    column-gap: 1rem;
+
+    margin-top: 1.35rem;
   }
 
-  .aperture-p1__description p {
-    font-size: 0.68rem;
+  .aperture-p1__availability {
+    grid-column: 1 / -1;
   }
 
-  .aperture-p1__back {
-    margin-top: 1.2rem;
-    font-size: 0.5rem;
+  .aperture-p1__detail-column p {
+    font-size: 0.65rem;
+  }
+
+  .aperture-p1__detail-label {
+    font-size: 0.58rem;
   }
 
   .aperture-p1__footer {
-    padding: 1rem 1.2rem;
+    padding: 0.9rem 5%;
+    font-size: 0.46rem;
   }
 
-  .aperture-p1__meta {
-    font-size: 0.42rem;
-  }
-
-  .aperture-p1__footer-right {
-    gap: 0;
-  }
-
-  .aperture-p1__footer-right > span {
+  .aperture-p1__footer > span {
     display: none;
   }
 
-  .aperture-p1__footer-right button {
-    font-size: 0.42rem;
+  .aperture-p1__footer button {
+    margin-left: auto;
   }
 }
 
 /* ==========================================
-   REDUCED MOTION
+   REDUCED MOTION ACCESSIBILITY
 ========================================== */
 
 @media (prefers-reduced-motion: reduce) {
